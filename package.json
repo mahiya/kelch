@@ -1,6 +1,6 @@
 {
     "name": "kelch",
-    "version": "0.1.0",
+    "version": "0.8.0",
     "description": "Build a Restful Web API incredibly easily using JavaScript and AWS Serverless Application Model",
     "preferGlobal": true,
     "engines": {
@@ -11,7 +11,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/mahiya/kelch"
+        "url": "https://github.com/mahiya/kelch.git"
     },
     "keywords": [],
     "author": {
@@ -19,6 +19,10 @@
         "email": "hiiyan0402@gmail.com"
     },
     "license": "MIT",
+    "homepage": "https://github.com/mahiya/kelch#readme",
+    "bugs": {
+        "url": "https://github.com/mahiya/kelch/issues"
+    },
     "dependencies": {
         "aws-sdk": "^2.538.0",
         "fs-extra": "^8.1.0"
