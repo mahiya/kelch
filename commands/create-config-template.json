@@ -1,0 +1,10 @@
+{
+    "stackName": "",
+    "s3BucketName": "",
+    "default": {
+        "timeout": 3,
+        "memorySize": 128,
+        "runtime": "nodejs8.10"
+    },
+    "functions": {}
+}

@@ -1,0 +1,30 @@
+{
+    "Transform": "AWS::Serverless-2016-10-31",
+    "Resources": {
+        "KelchAPIGateway": {
+            "Type": "AWS::Serverless::Api",
+            "Properties": {
+                "StageName": "api",
+                "Cors": {
+                    "AllowMethods": "'GET,POST,PUT,DELETE'",
+                    "AllowHeaders": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+                    "AllowOrigin": "'*'"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "KelchAPIGatewayOutput": {
+            "Value": {
+                "Fn::Sub": [
+                    "https://${API}.execute-api.${AWS::Region}.amazonaws.com/api/",
+                    {
+                        "API": {
+                            "Ref": "KelchAPIGateway"
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "stackName": "",
+    "s3BucketName": "",
+    "api": {
+        "cors": true,
+        "stageName": "api"
+    },
+    "auth": {
+        "userPoolArn": "",
+        "identityHeader": "Authorization"
+    },
+    "default": {
+        "auth": true,
+        "timeout": 3,
+        "memorySize": 128,
+        "runtime": "nodejs8.10",
+        "policies": {
+            "{Resource ARN}": []
+        },
+        "enviroment": {
+            "key": "value"
+        },
+        "tags": {
+            "name": "value"
+        },
+        "reservedConcurrentExecutions": null
+    },
+    "functions": {
+        "user.js": {
+            "auth": true,
+            "timeout": 3,
+            "memorySize": 128,
+            "runtime": "nodejs8.10",
+            "policies": {
+                "{Resource ARN}": []
+            },
+            "enviroment": {
+                "key": "value"
+            },
+            "tags": {
+                "name": "value"
+            },
+            "reservedConcurrentExecutions": null
+        }
+    }
+}
