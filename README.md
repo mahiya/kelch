@@ -48,8 +48,6 @@ API endpoint is defined according to file name (ex: deployed sample.js can be ac
 
 ## Command Help
 ```sh
-$ kelch --help
-
 Usage: kelch [OPTIONS] COMMAND [ARGS]...
 
 Options:
@@ -57,9 +55,15 @@ Options:
     --help
 
 Commands:
-    create resource
-    create config
-    delete
+    init
+        --stack-name    (optional, default: directory name)
+        --s3-bucket     (optional, default: directory name)
+    create-resource
+        --name          (required)
+    create-config
     deploy
-    logs
+        --stack-name    (optional, default: directory name)
+        --s3-bucket     (optional, default: directory name)
+    delete
+        --stack-name    (optional, default: directory name)
 ```
