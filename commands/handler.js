@@ -3,7 +3,7 @@ exports.handler = async (event) => {
 
     var req = {
         body: event.body,
-        queryParameters: event.queryStringParameters,
+        queryStringParameters: event.queryStringParameters,
         pathParameters: event.pathParameters,
         cognitoUserId: event != undefined
             && event.requestContext != undefined

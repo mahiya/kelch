@@ -1,7 +1,6 @@
 /**
  *  req = {
  *      body: object,
- *      queryParameters: string,
  *      pathParameters: [ string, ... ],
  *      queryStringParameters: [ string, ... ],
  *      cognitoUserId: string
