@@ -1,5 +1,5 @@
+.ignore
 node_modules
 package-lock.json
-.tmp
 push.sh
 .DS_Store
