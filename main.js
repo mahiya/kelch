@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const common = require('./commands/common');
 
@@ -69,7 +69,7 @@ async function version() {
     var packageJsonPath = path.join(__dirname, 'package.json');
     var packageJson = await fs.readFile(packageJsonPath, { encoding: 'utf-8' });
     var version = JSON.parse(packageJson)['version'];
-    console.log(version);
+    console.log('Kelch, version %s', version);
 }
 
 // $ kelch init
