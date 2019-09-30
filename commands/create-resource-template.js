@@ -6,15 +6,15 @@
  *      cognitoUserId: string
  *  }
  */
-function get(req) {
+async function get(req) {
     return 'Hello Kelch !!';
 }
 
-function post(req) {
+async function post(req) {
 }
 
-function put(req) {
+async function put(req) {
 }
 
-function del(req) {
+async function del(req) {
 }

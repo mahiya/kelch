@@ -16,19 +16,19 @@ exports.handler = async (event) => {
     if (event.httpMethod == "GET") {
         if (typeof get != 'function')
             return response(405);
-        return response(200, get(req));
+        return response(200, await get(req));
     } else if (event.httpMethod == "POST") {
         if (typeof post != 'function')
             return response(405);
-        return response(200, post(req));
+        return response(200, await post(req));
     } else if (event.httpMethod == "PUT") {
         if (typeof put != 'function')
             return response(405);
-        return response(200, put(req));
+        return response(200, await put(req));
     } else if (event.httpMethod == "DELETE") {
         if (typeof del != 'function')
             return response(405);
-        return response(200, post(req));
+        return response(200, await post(req));
     } else {
         return response(405);
     }
