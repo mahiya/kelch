@@ -20,7 +20,7 @@ exports.getRegion = function () {
     var lines = text.split('\n');
     for (var i = 0; i < lines.length; i++) {
         if (lines[i] == '[' + profile + ']' && i + 1 < lines.length) {
-            return lines[i + 1].replace('region = ', '');
+            return lines[i + 1].replace(/ /g, '').replace('region=', '');
         }
     }
     return null;
