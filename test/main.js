@@ -14,5 +14,17 @@ describe('main.js', function () {
         assert.property(result, '--version', 'check: having property "stackname"');
     });
 
+    it('checkParameterIsExists - Exists', async () => {
+        process.argv = ['node', 'kelch', 'deploy', '--version'];
+        var result = await app.checkParameterIsExists('--version');
+        assert.equal(result, true);
+    });
+
+    it('checkParameterIsExists - NotExists', async () => {
+        process.argv = ['node', 'kelch', 'deploy', '--version'];
+        var result = await app.checkParameterIsExists('--help');
+        assert.equal(result, false);
+    });
+
 });
 
