@@ -172,5 +172,6 @@ function getS3BucketName() {
     return common.getCurrentDirName();
 }
 
+exports.getParameter = getParameter;
 exports.checkParameterIsExists = checkParameterIsExists;
 exports.getParameters = getParameters;
