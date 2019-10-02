@@ -73,7 +73,7 @@ async function createTeamplte(workingDirPath) {
         // ResourcesにLambda Function リソースを追加する
         var logicalName = resourceName.match(/[0-9a-zA-Z]+/g).join("");
         var apiPath = '/' + resourceName;
-        results.apiPaths.push(apiPath);
+        result.apiPaths.push(apiPath);
         template['Resources'][logicalName] = {
             Type: 'AWS::Serverless::Function',
             Properties: {
@@ -102,10 +102,10 @@ async function createTeamplte(workingDirPath) {
     }
 
     // 生成した AWS CloudFormation テンプレートをファイルとして出力する
-    results.templateFilePath = path.join(workingDirPath, 'template.json');
-    await fs.writeFile(results.templateFilePath, JSON.stringify(template));
+    result.templateFilePath = path.join(workingDirPath, 'template.json');
+    await fs.writeFile(result.templateFilePath, JSON.stringify(template));
 
-    return results;
+    return result;
 }
 
 // 設定ファイル(kelch-config.json)での設定値を取得する
