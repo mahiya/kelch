@@ -171,3 +171,5 @@ function getS3BucketName() {
 
     return common.getCurrentDirName();
 }
+
+exports.getParameters = getParameters;
