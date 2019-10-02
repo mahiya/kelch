@@ -21,7 +21,7 @@ describe('commands/deploy.js', function () {
     });
 
     it('displayEndpoint', async () => {
-        await app.displayEndpoint(stackName);
+        await app.displayEndpoint(stackName, ['/test', '/test/todo']);
     });
 
 });

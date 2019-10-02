@@ -10,9 +10,9 @@ exports.run = async (stackName, bucketName) => {
     try {
         await createWorkingDirectory(workingDirPath);
         await createBucketIfNotExists(bucketName);
-        var templateFilePath = await createTeamplte(workingDirPath);
-        await deploy(templateFilePath, stackName, bucketName);
-        await displayEndpoint(stackName);
+        var result = await createTeamplte(workingDirPath);
+        await deploy(result.templateFilePath, stackName, bucketName);
+        await displayEndpoint(stackName, result.apiPaths);
     } catch (e) {
         console.error(e);
     } finally {
@@ -33,6 +33,12 @@ async function createTeamplte(workingDirPath) {
     // Get JavaScript file names
     const userCodesPath = '.';
     var fileNames = (await fs.readdir(userCodesPath)).filter(file => path.extname(file).toLowerCase() == '.js');
+
+    // メソッドの出力変数
+    var result = {
+        templateFilePath: '',
+        apiPaths: []
+    };
 
     // 各JavaScriptファイルごとに処理をする
     for (var i = 0; i < fileNames.length; i++) {
@@ -66,6 +72,8 @@ async function createTeamplte(workingDirPath) {
 
         // ResourcesにLambda Function リソースを追加する
         var logicalName = resourceName.match(/[0-9a-zA-Z]+/g).join("");
+        var apiPath = '/' + resourceName;
+        results.apiPaths.push(apiPath);
         template['Resources'][logicalName] = {
             Type: 'AWS::Serverless::Function',
             Properties: {
@@ -81,7 +89,7 @@ async function createTeamplte(workingDirPath) {
                     ApiCall: {
                         Type: 'Api',
                         Properties: {
-                            Path: '/' + resourceName,
+                            Path: apiPath,
                             Method: 'ANY',
                             RestApiId: {
                                 Ref: "KelchAPIGateway"
@@ -94,9 +102,10 @@ async function createTeamplte(workingDirPath) {
     }
 
     // 生成した AWS CloudFormation テンプレートをファイルとして出力する
-    const templateFilePath = path.join(workingDirPath, 'template.json');
-    await fs.writeFile(templateFilePath, JSON.stringify(template));
-    return templateFilePath;
+    results.templateFilePath = path.join(workingDirPath, 'template.json');
+    await fs.writeFile(results.templateFilePath, JSON.stringify(template));
+
+    return results;
 }
 
 // 設定ファイル(kelch-config.json)での設定値を取得する
@@ -121,11 +130,12 @@ async function deploy(templateFilePath, stackName, bucketName) {
 }
 
 // 生成した API Gateway のエンドポイントを表示する
-async function displayEndpoint(stackName) {
+async function displayEndpoint(stackName, apiPaths) {
     var outputs = await getStackOutput(stackName);
     var endpoint = outputs['KelchAPIGatewayOutput'];
     if (!endpoint) return;
-    console.log('REST APIs URL:\n%s', endpoint);
+    console.log('REST APIs URL:');
+    apiPaths.forEach(apiPath => console.log(endpoint + apiPath.replace('/', '')));
 }
 
 // 指定したAWS CloudFormation Stack の Outputs の値を返す
