@@ -12,6 +12,7 @@ exports.run = async (stackName, bucketName) => {
         await createBucketIfNotExists(bucketName);
         var templateFilePath = await createTeamplte(workingDirPath);
         await deploy(templateFilePath, stackName, bucketName);
+        await displayEndpoint(stackName);
     } catch (e) {
         console.error(e);
     } finally {
@@ -122,18 +123,29 @@ async function deploy(templateFilePath, stackName, bucketName) {
     await common.exec('aws cloudformation deploy --template-file ' + templateFilePath + ' --stack-name ' + stackName + ' --capabilities CAPABILITY_IAM');
 }
 
-async function getStackOutput(stackName) {
-    var stack = await getStackInfo(stackName);
-    if (!stack['Outputs']) return {};
-    return stack['Outputs'];
+// 生成した API Gateway のエンドポイントを表示する
+async function displayEndpoint(stackName) {
+    var outputs = await getStackOutput(stackName);
+    var endpoint = outputs['KelchAPIGatewayOutput'];
+    if (!endpoint) return;
+    console.log('REST APIs URL:\n%s', endpoint);
 }
 
+// 指定したAWS CloudFormation Stack の Outputs の値を返す
+async function getStackOutput(stackName) {
+    var stack = await getStackInfo(stackName);
+    var outputs = {};
+    stack['Outputs'].forEach(output => {
+        outputs[output.OutputKey] = output.OutputValue;
+    })
+    return outputs;
+}
+
+// 指定したAWS CloudFormation Stack 情報を返す
 async function getStackInfo(stackName) {
-    var outputs = await common.exec('aws cloudformation describe-stacks --stack-name ' + stackName);
-    if (outputs.length < 1) return null;
-    var stacks = JSON.parse(outputs[0]);
-    if (stacks['Stacks'].length < 1) return null;
-    return stacks[0];
+    var client = new AWS.CloudFormation();
+    var stacks = await client.describeStacks({ StackName: stackName }).promise();
+    return stacks['Stacks'][0];
 }
 
 // 作業用一時フォルダを作成する
@@ -162,3 +174,7 @@ async function createBucketIfNotExists(bucketName) {
         await s3.createBucket({ Bucket: bucketName }).promise();
     }
 }
+
+exports.getStackInfo = getStackInfo;
+exports.getStackOutput = getStackOutput;
+exports.displayEndpoint = displayEndpoint;
