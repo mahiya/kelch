@@ -1,0 +1,12 @@
+{
+  "stackName": "sample-project",
+  "s3BucketName": "sample-project",
+  "default": {
+    "timeout": 3,
+    "memorySize": 128,
+    "runtime": "nodejs8.10"
+  },
+  "functions": {
+    "sample.js": {}
+  }
+}

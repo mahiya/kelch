@@ -10,7 +10,7 @@ exports.run = async (stackName, bucketName) => {
     try {
         await createWorkingDirectory(workingDirPath);
         await createBucketIfNotExists(bucketName);
-        var result = await createTeamplte(workingDirPath);
+        var result = await createTeamplte(workingDirPath, '.');
         await deploy(result.templateFilePath, stackName, bucketName);
         await displayEndpoint(stackName, result.apiPaths);
     } catch (e) {
@@ -20,7 +20,7 @@ exports.run = async (stackName, bucketName) => {
     }
 }
 
-async function createTeamplte(workingDirPath) {
+async function createTeamplte(workingDirPath, userCodesPath) {
 
     console.log('Creating upload artifacts and AWS CloudFormation template file');
 
@@ -31,7 +31,6 @@ async function createTeamplte(workingDirPath) {
     var handlerCode = await fs.readFile(path.join(__dirname, 'handler.js'), { encoding: 'utf-8' });
 
     // Get JavaScript file names
-    const userCodesPath = '.';
     var fileNames = (await fs.readdir(userCodesPath)).filter(file => path.extname(file).toLowerCase() == '.js');
 
     // メソッドの出力変数
@@ -59,8 +58,9 @@ async function createTeamplte(workingDirPath) {
         await fs.writeFile(path.join(functionDirPath, fileName), userCode + "\n" + handlerCode);
 
         // node_modulesフォルダをコピーする
-        if (await fs.exists('node_modules')) {
-            await fs.copy('node_modules', path.join(functionDirPath, 'node_modules'));
+        var nodeModulesPath = path.join(userCodesPath, 'node_modules');
+        if (await fs.exists(nodeModulesPath)) {
+            await fs.copy(nodeModulesPath, path.join(functionDirPath, 'node_modules'));
         }
 
         // 関数の設定を定義する
@@ -183,3 +183,4 @@ async function createBucketIfNotExists(bucketName) {
 exports.getStackInfo = getStackInfo;
 exports.getStackOutput = getStackOutput;
 exports.displayEndpoint = displayEndpoint;
+exports.createTeamplte = createTeamplte;
