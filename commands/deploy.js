@@ -122,6 +122,14 @@ async function deploy(templateFilePath, stackName, bucketName) {
     await common.exec('aws cloudformation deploy --template-file ' + templateFilePath + ' --stack-name ' + stackName + ' --capabilities CAPABILITY_IAM');
 }
 
+async function getStackInfo(stackName) {
+    var outputs = await common.exec('aws cloudformation describe-stacks --stack-name ' + stackName);
+    if (outputs.length < 1) return null;
+    var stacks = JSON.parse(outputs[0]);
+    if (stacks['Stacks'].length < 1) return null;
+    return stacks[0];
+}
+
 // 作業用一時フォルダを作成する
 async function createWorkingDirectory(path) {
     console.log("Creating temporary working directory ...")
