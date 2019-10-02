@@ -136,6 +136,7 @@ async function displayEndpoint(stackName, apiPaths) {
     if (!endpoint) return;
     console.log('REST APIs URL:');
     apiPaths.forEach(apiPath => console.log(endpoint + apiPath.replace('/', '')));
+    console.log('');
 }
 
 // 指定したAWS CloudFormation Stack の Outputs の値を返す
