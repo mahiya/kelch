@@ -22,7 +22,7 @@ exports.run = async (stackName, bucketName) => {
 
 async function createTeamplte(workingDirPath) {
 
-    console.log('Creating AWS CloudFormation template file ...');
+    console.log('Creating upload artifacts and AWS CloudFormation template file');
 
     // Read template file of AWS CloudFormation template
     var template = await fs.readJSON(path.join(__dirname, 'base-template.json'));
@@ -44,7 +44,6 @@ async function createTeamplte(workingDirPath) {
         // 各JSファイルごとにフォルダを作成する
         var codeDirName = resourceName;
         var functionDirPath = path.join(workingDirPath, codeDirName);
-        console.log('Creating Lambda function folder: %s', functionDirPath);
         await fs.mkdir(functionDirPath);
 
         // 対象のJSファイルのコードを読み込む
@@ -55,7 +54,6 @@ async function createTeamplte(workingDirPath) {
 
         // node_modulesフォルダをコピーする
         if (await fs.exists('node_modules')) {
-            console.log('Copying node_modules directory to %s', functionDirPath);
             await fs.copy('node_modules', path.join(functionDirPath, 'node_modules'));
         }
 
@@ -97,7 +95,6 @@ async function createTeamplte(workingDirPath) {
 
     // 生成した AWS CloudFormation テンプレートをファイルとして出力する
     const templateFilePath = path.join(workingDirPath, 'template.json');
-    console.log('Outputting  AWS CloudFormation template file: %s', templateFilePath);
     await fs.writeFile(templateFilePath, JSON.stringify(template));
     return templateFilePath;
 }
@@ -150,14 +147,12 @@ async function getStackInfo(stackName) {
 
 // 作業用一時フォルダを作成する
 async function createWorkingDirectory(path) {
-    console.log("Creating temporary working directory ...")
     await fs.remove(path);
     await fs.mkdir(path);
 }
 
 // 作業用一時フォルダを削除する
 async function deleteWorkingDirectory(path) {
-    console.log("Deleting temporary working directory ...")
     await fs.remove(path);
 }
 
@@ -165,12 +160,11 @@ async function deleteWorkingDirectory(path) {
 async function createBucketIfNotExists(bucketName) {
     var s3 = new AWS.S3();
     try {
-        console.log("Checking S3 bucket '%s' is exists ...", bucketName);
         await s3.headBucket({ Bucket: bucketName }).promise();
     } catch (e) {
         if (e.statusCode != 404) throw e;
         // HTTP status code が 404 の場合は存在しないので作成する
-        console.log("Creating S3 bucket '%s' ...", bucketName);
+        console.log("Creating S3 bucket '%s'", bucketName);
         await s3.createBucket({ Bucket: bucketName }).promise();
     }
 }
