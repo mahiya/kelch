@@ -4,12 +4,25 @@ const spawn = require("child_process").spawn;
 
 exports.exec = async function (command) {
     return new Promise((resolve) => {
-        console.log('Execute command: %s', command);
         var args = command.split(' ');
-        if (args.length == 0) return;
+        if (args.length == 0) {
+            return resolve();
+        }
+
+        console.log('Execute command: %s', command);
+        var outputs = [];
         var process = spawn(args[0], args.slice(1, args.length));
-        process.stdout.on("data", (data) => console.log(data.toString()));
-        process.on("close", (code) => resolve(code == 0));
+        process.stdout.on("data", (data) => {
+            var output = data.toString();
+            console.log(output);
+            outputs.push(output);
+        });
+        process.on("close", (code) => {
+            resolve({
+                success: code == 0,
+                outputs: outputs
+            });
+        });
     });
 }
 
