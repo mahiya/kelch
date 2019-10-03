@@ -5,7 +5,7 @@ const common = require('./commands/common');
 module.exports = class Kelch {
     constructor(argv) {
         this.argv = argv;
-        this._cachedParameters = null;
+        this.cachedParameters = null;
     }
 
     async run() {
@@ -23,25 +23,25 @@ module.exports = class Kelch {
 
         switch (command) {
             case 'init':
-                await init()
+                await this.init()
                 break;
             case 'create-resource':
-                await createResource();
+                await this.createResource();
                 break;
             case 'create-config':
-                await createConfig();
+                await this.createConfig();
                 break;
             case 'update-config':
-                await updateConfig();
+                await this.updateConfig();
                 break;
             case 'deploy':
-                await deploy()
+                await this.deploy()
                 break;
             case 'delete':
-                await del()
+                await this.del()
                 break;
             default:
-                usage();
+                this.usage();
         }
     }
 
@@ -79,16 +79,16 @@ Commands:
 
     // $ kelch init
     async init() {
-        var stackName = getStackName();
-        var s3BucketName = getS3BucketName();
+        var stackName = this.getStackName();
+        var s3BucketName = this.getS3BucketName();
         await require('./commands/init').run(stackName, s3BucketName);
     }
 
     // $ kelch create-resoure
     async createResource() {
-        var resourceName = getParameter('--name');
+        var resourceName = this.getParameter('--name');
         if (resourceName == null) {
-            usage();
+            this.usage();
             return;
         }
         await require('./commands/create-resource').run(resourceName);
@@ -106,14 +106,14 @@ Commands:
 
     // $ kelch deloy
     async deploy() {
-        var stackName = getStackName();
-        var s3BucketName = getS3BucketName();
+        var stackName = this.getStackName();
+        var s3BucketName = this.getS3BucketName();
         await require('./commands/deploy').run(stackName, s3BucketName);
     }
 
     // $ kelch delete
     async del() {
-        var stackName = getStackName();
+        var stackName = this.getStackName();
         await require('./commands/delete').run(stackName);
     }
 
@@ -124,7 +124,7 @@ Commands:
 
     // 指定されたパラメータの値を返す。指定していない場合はデフォルト値を返す
     getParameter(parameterName, defaultValue = null) {
-        var parameters = getParameters();
+        var parameters = this.getParameters();
         return parameters[parameterName] == undefined
             ? defaultValue
             : parameters[parameterName];
@@ -132,28 +132,28 @@ Commands:
 
     // 指定されたパラメータが入力されているかを返す
     checkParameterIsExists(parameterName) {
-        return getParameters()[parameterName] != undefined;
+        return this.getParameters()[parameterName] != undefined;
     }
 
     // プログラム実行時に入力されたパラメータを返す
     getParameters() {
-        if (!_cachedParameters) {
-            _cachedParameters = {};
+        if (!this.cachedParameters) {
+            this.cachedParameters = {};
             for (var i = 0; i < this.argv.length; i++) {
                 if (!this.argv[i].startsWith('--')) continue;
                 if (i + 1 < this.argv.length && !this.argv[i + 1].startsWith('--')) {
-                    _cachedParameters[this.argv[i]] = this.argv[i + 1];
+                    this.cachedParameters[this.argv[i]] = this.argv[i + 1];
                     i++;
                 } else {
-                    _cachedParameters[this.argv[i]] = '';
+                    this.cachedParameters[this.argv[i]] = '';
                 }
             }
         }
-        return _cachedParameters;
+        return this.cachedParameters;
     }
 
     getStackName() {
-        var stackName = getParameter("--stack-name");
+        var stackName = this.getParameter("--stack-name");
         if (stackName != null) return stackName;
 
         var config = common.getConfig();
@@ -165,7 +165,7 @@ Commands:
     }
 
     getS3BucketName() {
-        var bucketName = getParameter("--s3-bucket");
+        var bucketName = this.getParameter("--s3-bucket");
         if (bucketName != null) return bucketName;
 
         var config = common.getConfig();

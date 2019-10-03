@@ -3,40 +3,47 @@ const assert = chai.assert;
 
 describe('kelch.js', function () {
 
-    var app = require('../kelch');
-    const stackName = 'sample-stack';
-    process.argv = ['node', 'kelch', 'deploy', '--stackName', stackName, '--version'];
+    const Kelch = require('../kelch.js');
 
     it('getParameter - Exists', async () => {
-        const defaultValue = 'default-value';
-        var result = await app.getParameter('--stackName', defaultValue);
+        const stackName = 'sample-stack';
+        var argv = ['node', 'kelch', 'deploy', '--stackName', stackName, '--version'];
+        var kelch = new Kelch(argv);
+        var result = await kelch.getParameter('--stackName', 'default-value');
         assert.typeOf(result, 'string', 'check: type of result');
         assert.equal(result, stackName);
     });
 
     it('getParameter - NotExists', async () => {
         const defaultValue = 'default-value';
-        var result = await app.getParameter('--stackNameX', defaultValue);
+        var argv = ['node', 'kelch', 'deploy'];
+        var kelch = new Kelch(argv);
+        var result = await kelch.getParameter('--stackName', defaultValue);
         assert.typeOf(result, 'string', 'check: type of result');
         assert.equal(result, defaultValue);
     });
 
     it('checkParameterIsExists - Exists', async () => {
-        process.argv = ['node', 'kelch', 'deploy', '--version'];
-        var result = await app.checkParameterIsExists('--version');
+        var argv = ['node', 'kelch', 'deploy', '--version'];
+        var kelch = new Kelch(argv);
+        var result = await kelch.checkParameterIsExists('--version');
         assert.typeOf(result, 'boolean', 'check: type of result');
         assert.equal(result, true);
     });
 
     it('checkParameterIsExists - NotExists', async () => {
-        process.argv = ['node', 'kelch', 'deploy', '--version'];
-        var result = await app.checkParameterIsExists('--help');
+        var argv = ['node', 'kelch', 'deploy', '--version'];
+        var kelch = new Kelch(argv);
+        var result = await kelch.checkParameterIsExists('--help');
         assert.typeOf(result, 'boolean', 'check: type of result');
         assert.equal(result, false);
     });
 
     it('getParameters', async () => {
-        var result = await app.getParameters();
+        const stackName = 'sample-stack';
+        var argv = ['node', 'kelch', 'deploy', '--stackName', stackName, '--version'];
+        var kelch = new Kelch(argv);
+        var result = await kelch.getParameters();
         assert.typeOf(result, 'object', 'check: type of result');
         assert.property(result, '--stackName', 'check: having property "stackName"');
         assert.equal(result['--stackName'], stackName);
