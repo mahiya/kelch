@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-require('./main').run();
+const Kelch = require('./kelch.js');
+new Kelch(process.argv).run();

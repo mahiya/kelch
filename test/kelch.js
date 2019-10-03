@@ -1,9 +1,9 @@
 const chai = require('chai');
 const assert = chai.assert;
 
-describe('main.js', function () {
+describe('kelch.js', function () {
 
-    var app = require('../main');
+    var app = require('../kelch');
     const stackName = 'sample-stack';
     process.argv = ['node', 'kelch', 'deploy', '--stackName', stackName, '--version'];
 
