@@ -5,6 +5,14 @@ describe('kelch.js', function () {
 
     const Kelch = require('../kelch.js');
 
+    it('getCommand', async () => {
+        var argv = ['node', 'kelch', 'deploy'];
+        var kelch = new Kelch(argv);
+        var result = await kelch.getCommand();
+        assert.typeOf(result, 'string', 'check: type of result');
+        assert.equal(result, 'deploy');
+    });
+
     it('getParameter - Exists', async () => {
         const stackName = 'sample-stack';
         var argv = ['node', 'kelch', 'deploy', '--stackName', stackName, '--version'];
