@@ -22,13 +22,14 @@ describe('deploy.js', function () {
         }
     });
 
-    it('listFunctionApiPath', async () => {
+    it('listFunctionsApiPath', async () => {
         var kelchDeploy = new KelchDeploy(config, workingDirPath);
         try {
             await kelchDeploy.createWorkingDirectory();
             var template = await kelchDeploy.createTeamplte('test/sample-project');
-            var result = await kelchDeploy.listFunctionApiPath(template);
+            var result = await kelchDeploy.listFunctionsApiPath(template);
             assert.typeOf(result, 'array', 'check: type of result');
+            assert.equal(result.length, 2, 'check: returned API path count');
         } finally {
             await kelchDeploy.deleteWorkingDirectory();
         }

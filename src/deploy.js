@@ -28,7 +28,7 @@ module.exports = class KelchDeploy {
 
             // AWS CloudFormation スタックをデプロイする            
             await this.deployStack(templateFilePath, stackName, bucketName);
-            var apiPaths = this.listFunctionApiPath(template);
+            var apiPaths = this.listFunctionsApiPath(template);
             await this.displayEndpoint(stackName, apiPaths);
 
         } catch (e) {
@@ -157,7 +157,8 @@ module.exports = class KelchDeploy {
         await common.exec('aws cloudformation deploy --template-file ' + templateFilePath + ' --stack-name ' + stackName + ' --capabilities CAPABILITY_IAM');
     }
 
-    listFunctionApiPath(template) {
+    // テンプレートで設定されたFunctionのAPIパス一覧を返す
+    listFunctionsApiPath(template) {
         var apiPaths = [];
         for (var logicalName in template.Resources) {
             if (logicalName == 'KelchAPIGateway') continue;
