@@ -1,6 +1,8 @@
 const fs = require('fs-extra');
 const path = require('path');
 const common = require('./common');
+const KelchCommand = require('./command');
+const KelchDeploy = require('./deploy');
 
 module.exports = class Kelch {
 
@@ -80,11 +82,11 @@ Commands:
 
     // $ kelch init
     async init() {
-        const KelchInit = require('./init');
-        var kelchInit = new KelchInit();
+        const KelchCommand = require('./command');
+        var kelchCommand = new KelchCommand();
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
-        await kelchInit.init(stackName, s3BucketName);
+        await kelchCommand.init(stackName, s3BucketName);
     }
 
     // $ kelch create-resoure
@@ -94,22 +96,24 @@ Commands:
             this.usage();
             return;
         }
-        await require('./create-resource').run(resourceName);
+        var command = new KelchCommand();
+        await command.createResource(resourceName);
     }
 
     // $ kelch create-config
     async createConfig() {
-        await require('./create-config').run();
+        var command = new KelchCommand();
+        await command.createConfig();
     }
 
     // $ kelch update-config
     async updateConfig() {
-        await require('./update-config').run();
+        var command = new KelchCommand();
+        await command.updateConfig();
     }
 
     // $ kelch deloy
     async deploy() {
-        const KelchDeploy = require('./deploy');
         var kelchDeploy = new KelchDeploy();
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
@@ -118,10 +122,9 @@ Commands:
 
     // $ kelch delete
     async del() {
-        const KelchDelete = require('./delete');
-        var kelchDelete = new KelchDelete();
+        var command = new KelchCommand();
         var stackName = this.getStackName();
-        await kelchDelete.deleteStack(stackName);
+        await command.deleteStack(stackName);
     }
 
     // プログラム実行時に指定されたコマンドを返す
