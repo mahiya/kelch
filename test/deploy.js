@@ -22,6 +22,37 @@ describe('deploy.js', function () {
         }
     });
 
+    it('getFunctionParameter - function value', async () => {
+        var config = {
+            default: { timeout: 1 },
+            functions: {
+                "sample.js": { timeout: 2 }
+            }
+        };
+        var kelchDeploy = new KelchDeploy(config);
+        var result = kelchDeploy.getFunctionParameter('sample.js', 'timeout', 3);
+        assert.typeOf(result, 'number', 'check: type of result');
+        assert.equal(result, 2, 'check: type of result');
+    });
+
+    it('getFunctionParameter - config default value', async () => {
+        var config = {
+            default: { timeout: 1 }
+        };
+        var kelchDeploy = new KelchDeploy(config);
+        var result = kelchDeploy.getFunctionParameter('sample.js', 'timeout', 3);
+        assert.typeOf(result, 'number', 'check: type of result');
+        assert.equal(result, 1, 'check: type of result');
+    });
+
+    it('getFunctionParameter - config default', async () => {
+        var config = {};
+        var kelchDeploy = new KelchDeploy(config);
+        var result = kelchDeploy.getFunctionParameter('sample.js', 'timeout', 3);
+        assert.typeOf(result, 'number', 'check: type of result');
+        assert.equal(result, 3, 'check: type of result');
+    });
+
     it('listFunctionsApiPath', async () => {
         var kelchDeploy = new KelchDeploy(config, workingDirPath);
         try {
@@ -33,6 +64,11 @@ describe('deploy.js', function () {
         } finally {
             await kelchDeploy.deleteWorkingDirectory();
         }
+    });
+
+    it('displayEndpoint', async () => {
+        var kelchDeploy = new KelchDeploy();
+        await kelchDeploy.displayEndpoint(stackName, ['/test', '/test/todo']);
     });
 
     it('getStackOutput', async () => {
@@ -47,11 +83,6 @@ describe('deploy.js', function () {
         var result = await kelchDeploy.getStackInfo(stackName);
         assert.typeOf(result, 'object', 'check: type of result');
         assert.property(result, 'StackId', 'check: having property "StackId"');
-    });
-
-    it('displayEndpoint', async () => {
-        var kelchDeploy = new KelchDeploy();
-        await kelchDeploy.displayEndpoint(stackName, ['/test', '/test/todo']);
     });
 
 });
