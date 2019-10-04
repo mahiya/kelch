@@ -92,5 +92,40 @@ describe('kelch.js', function () {
         assert.equal(result, 'kelch', 'check: result value');
     });
 
+
+
+    it('getS3BucketName - from process parameters', async () => {
+        const bucketNameByParameter = 'bucket-name-by-parameter';
+        var argv = ['node', 'kelch', 'deploy', '--s3-bucket', bucketNameByParameter];
+        var kelch = new Kelch(argv, './test/kelch-configs/kelch-config.json');
+        var result = kelch.getS3BucketName();
+        assert.typeOf(result, 'string', 'check: type of result');
+        assert.equal(result, bucketNameByParameter, 'check: result value');
+    });
+
+    it('getS3BucketName - from config file', async () => {
+        var argv = ['node', 'kelch', 'deploy'];
+        var kelch = new Kelch(argv, './test/kelch-configs/kelch-config.json');
+        var result = kelch.getS3BucketName();
+        assert.typeOf(result, 'string', 'check: type of result');
+        assert.equal(result, 'bucket-name-by-config', 'check: result value');
+    });
+
+    it('getS3BucketName - default - config file exists', async () => {
+        var argv = ['node', 'kelch', 'deploy'];
+        var kelch = new Kelch(argv, './test/kelch-configs/kelch-config-empty.json');
+        var result = kelch.getS3BucketName();
+        assert.typeOf(result, 'string', 'check: type of result');
+        assert.equal(result, 'kelch', 'check: result value');
+    });
+
+    it('getS3BucketName - default - config file not exists', async () => {
+        var argv = ['node', 'kelch', 'deploy'];
+        var kelch = new Kelch(argv, './test/kelch-configs/kelch-config-not-exists.json');
+        var result = kelch.getS3BucketName();
+        assert.typeOf(result, 'string', 'check: type of result');
+        assert.equal(result, 'kelch', 'check: result value');
+    });
+
 });
 

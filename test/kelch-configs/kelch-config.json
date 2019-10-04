@@ -1,3 +1,4 @@
 {
-    "stackName": "stack-name-by-config"
+    "stackName": "stack-name-by-config",
+    "s3BucketName": "bucket-name-by-config"
 }
