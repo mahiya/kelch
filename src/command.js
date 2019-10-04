@@ -1,4 +1,6 @@
 const KelchCommon = require('./common');
+const fs = require('fs-extra');
+const path = require('path');
 
 module.exports = class KelchCommand {
 
@@ -7,10 +9,11 @@ module.exports = class KelchCommand {
         await this.createConfig();
     }
 
-    async createResource(resourceName) {
+    async createResource(resourceName, destDirPath = '.') {
         const templateCodePath = path.join(__dirname, 'template', 'resource-template.js');
         var templateCode = await fs.readFile(templateCodePath, { encoding: 'utf-8' });
-        await fs.writeFile(resourceName + '.js', templateCode);
+        var newFilePath = path.join(destDirPath, resourceName + '.js');
+        await fs.writeFile(newFilePath, templateCode);
     }
 
     async createConfig() {
