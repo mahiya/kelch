@@ -22,12 +22,14 @@ module.exports = class KelchDeploy {
             // AWS CloudFormation テンプレートを生成してファイル出力する
             const userCodesPath = '.';
             var template = await this.createTeamplte(userCodesPath);
+            console.log('Creating upload artifacts and AWS CloudFormation template file');
             const templateFilePath = path.join(this.workingDirPath, 'template.json');
             await this.outputTemplateFile(template, templateFilePath)
 
-            // AWS CloudFormation スタックをデプロイする
+            // AWS CloudFormation スタックをデプロイする            
             await this.deployStack(templateFilePath, stackName, bucketName);
-            await this.displayEndpoint(stackName, result.apiPaths);
+            var apiPaths = this.listFunctionApiPath(template);
+            await this.displayEndpoint(stackName, apiPaths);
 
         } catch (e) {
             console.error(e);
@@ -57,8 +59,6 @@ module.exports = class KelchDeploy {
     }
 
     async createTeamplte(userCodesPath) {
-
-        console.log('Creating upload artifacts and AWS CloudFormation template file');
 
         // Read template file of AWS CloudFormation template
         var template = await fs.readJSON(path.join(__dirname, 'base-template.json'));
@@ -114,7 +114,7 @@ module.exports = class KelchDeploy {
                     //Tags: properties.tags,
                     //ReservedConcurrentExecutions: properties.concurrentExecutions
                     Events: {
-                        ApiCall: {
+                        APIGateway: {
                             Type: 'Api',
                             Properties: {
                                 Path: '/' + resourceName,
@@ -157,10 +157,14 @@ module.exports = class KelchDeploy {
         await common.exec('aws cloudformation deploy --template-file ' + templateFilePath + ' --stack-name ' + stackName + ' --capabilities CAPABILITY_IAM');
     }
 
-    async listFunctionApiPath(template) {
-        template.Resources.forEach(resource => {
-            console.log(resource);
-        });
+    listFunctionApiPath(template) {
+        var apiPaths = [];
+        for (var logicalName in template.Resources) {
+            if (logicalName == 'KelchAPIGateway') continue;
+            var resource = template.Resources[logicalName];
+            apiPaths.push(resource.Properties.Events.APIGateway.Properties.Path);
+        }
+        return apiPaths;
     }
 
     // 生成した API Gateway のエンドポイントを表示する

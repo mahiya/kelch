@@ -9,13 +9,26 @@ describe('deploy.js', function () {
     const KelchDeploy = require('../src/deploy.js');
     const stackName = 'kelch-test';
     const config = fs.readJSONSync('test/sample-project/kelch-config.json');
+    const workingDirPath = 'test/.tmp';
 
     it('createTeamplte', async () => {
-        var kelchDeploy = new KelchDeploy(config, 'test/.tmp');
+        var kelchDeploy = new KelchDeploy(config, workingDirPath);
         try {
             await kelchDeploy.createWorkingDirectory();
             var result = await kelchDeploy.createTeamplte('test/sample-project');
             assert.typeOf(result, 'object', 'check: type of result');
+        } finally {
+            await kelchDeploy.deleteWorkingDirectory();
+        }
+    });
+
+    it('listFunctionApiPath', async () => {
+        var kelchDeploy = new KelchDeploy(config, workingDirPath);
+        try {
+            await kelchDeploy.createWorkingDirectory();
+            var template = await kelchDeploy.createTeamplte('test/sample-project');
+            var result = await kelchDeploy.listFunctionApiPath(template);
+            assert.typeOf(result, 'array', 'check: type of result');
         } finally {
             await kelchDeploy.deleteWorkingDirectory();
         }
