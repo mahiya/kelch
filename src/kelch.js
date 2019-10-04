@@ -72,7 +72,7 @@ Commands:
 
     // $ kelch --version
     async version() {
-        var packageJsonPath = path.join(__dirname, 'package.json');
+        var packageJsonPath = path.join(__dirname, '../package.json');
         var packageJson = await fs.readFile(packageJsonPath, { encoding: 'utf-8' });
         var version = JSON.parse(packageJson)['version'];
         console.log('Kelch, version %s', version);
