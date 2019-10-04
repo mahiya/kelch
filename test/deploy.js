@@ -8,27 +8,17 @@ describe('deploy.js', function () {
 
     const KelchDeploy = require('../src/deploy.js');
     const stackName = 'kelch-test';
+    const config = fs.readJSONSync('test/sample-project/kelch-config.json');
 
     it('createTeamplte', async () => {
-        const workingDirPath = 'test/.tmp';
-        await fs.remove(workingDirPath);
-        await fs.mkdir(workingDirPath);
+        var kelchDeploy = new KelchDeploy(config, 'test/.tmp');
         try {
-            var kelchDeploy = new KelchDeploy();
-            var result = await kelchDeploy.createTeamplte(workingDirPath, 'test/sample-project');
+            await kelchDeploy.createWorkingDirectory();
+            var result = await kelchDeploy.createTeamplte('test/sample-project');
             assert.typeOf(result, 'object', 'check: type of result');
-            assert.property(result, 'templateFilePath', 'check: having property "templateFilePath"');
-            assert.property(result, 'apiPaths', 'check: having property "apiPaths"');
         } finally {
-            await fs.remove(workingDirPath);
+            await kelchDeploy.deleteWorkingDirectory();
         }
-    });
-
-    it('getStackInfo', async () => {
-        var kelchDeploy = new KelchDeploy();
-        var result = await kelchDeploy.getStackInfo(stackName);
-        assert.typeOf(result, 'object', 'check: type of result');
-        assert.property(result, 'StackId', 'check: having property "StackId"');
     });
 
     it('getStackOutput', async () => {
@@ -36,6 +26,13 @@ describe('deploy.js', function () {
         var result = await kelchDeploy.getStackOutput(stackName);
         assert.typeOf(result, 'object', 'check: type of result');
         assert.property(result, 'KelchAPIGatewayOutput', 'check: having property "KelchAPIGatewayOutput"');
+    });
+
+    it('getStackInfo', async () => {
+        var kelchDeploy = new KelchDeploy();
+        var result = await kelchDeploy.getStackInfo(stackName);
+        assert.typeOf(result, 'object', 'check: type of result');
+        assert.property(result, 'StackId', 'check: having property "StackId"');
     });
 
     it('displayEndpoint', async () => {

@@ -43,11 +43,3 @@ exports.getRegion = function () {
 exports.getCurrentDirName = () => {
     return path.basename(process.cwd());
 }
-
-exports.getConfig = (configPath) => {
-    if (fs.existsSync(configPath)) {
-        return fs.readJSONSync(configPath);
-    } else {
-        return {};
-    }
-}

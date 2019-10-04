@@ -7,7 +7,7 @@ module.exports = class Kelch {
     constructor(argv, configFilePath = path.join('.', 'kelch-config.json')) {
         this.command = this.getCommand(argv);
         this.parameters = this.getParameters(argv);
-        this.config = common.getConfig(configFilePath);
+        this.config = this.getConfig(configFilePath);
     }
 
     async run() {
@@ -111,7 +111,7 @@ Commands:
         var s3BucketName = this.getS3BucketName();
         const KelchDeploy = require('./deploy');
         var kelchDeploy = new KelchDeploy();
-        kelchDeploy.run(stackName, s3BucketName);
+        kelchDeploy.deploy(stackName, s3BucketName);
     }
 
     // $ kelch delete
@@ -174,4 +174,11 @@ Commands:
         return common.getCurrentDirName();
     }
 
+    getConfig(configPath) {
+        if (fs.existsSync(configPath)) {
+            return fs.readJSONSync(configPath);
+        } else {
+            return {};
+        }
+    }
 }
