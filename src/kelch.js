@@ -109,7 +109,9 @@ Commands:
     async deploy() {
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
-        await require('./deploy').run(stackName, s3BucketName);
+        const KelchDeploy = require('./deploy');
+        var kelchDeploy = new KelchDeploy();
+        kelchDeploy.run(stackName, s3BucketName);
     }
 
     // $ kelch delete

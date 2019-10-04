@@ -6,7 +6,7 @@ const assert = chai.assert;
 
 describe('deploy.js', function () {
 
-    var app = require('../src/deploy');
+    const KelchDeploy = require('../src/deploy.js');
     const stackName = 'kelch-test';
 
     it('createTeamplte', async () => {
@@ -14,7 +14,8 @@ describe('deploy.js', function () {
         await fs.remove(workingDirPath);
         await fs.mkdir(workingDirPath);
         try {
-            var result = await app.createTeamplte(workingDirPath, 'test/sample-project');
+            var kelchDeploy = new KelchDeploy();
+            var result = await kelchDeploy.createTeamplte(workingDirPath, 'test/sample-project');
             assert.typeOf(result, 'object', 'check: type of result');
             assert.property(result, 'templateFilePath', 'check: having property "templateFilePath"');
             assert.property(result, 'apiPaths', 'check: having property "apiPaths"');
@@ -24,19 +25,22 @@ describe('deploy.js', function () {
     });
 
     it('getStackInfo', async () => {
-        var result = await app.getStackInfo(stackName);
+        var kelchDeploy = new KelchDeploy();
+        var result = await kelchDeploy.getStackInfo(stackName);
         assert.typeOf(result, 'object', 'check: type of result');
         assert.property(result, 'StackId', 'check: having property "StackId"');
     });
 
     it('getStackOutput', async () => {
-        var result = await app.getStackOutput(stackName);
+        var kelchDeploy = new KelchDeploy();
+        var result = await kelchDeploy.getStackOutput(stackName);
         assert.typeOf(result, 'object', 'check: type of result');
         assert.property(result, 'KelchAPIGatewayOutput', 'check: having property "KelchAPIGatewayOutput"');
     });
 
     it('displayEndpoint', async () => {
-        await app.displayEndpoint(stackName, ['/test', '/test/todo']);
+        var kelchDeploy = new KelchDeploy();
+        await kelchDeploy.displayEndpoint(stackName, ['/test', '/test/todo']);
     });
 
 });
