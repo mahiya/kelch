@@ -1,6 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
-const common = require('./commands/common');
+const common = require('./common');
 
 module.exports = class Kelch {
 
@@ -82,7 +82,7 @@ Commands:
     async init() {
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
-        await require('./commands/init').run(stackName, s3BucketName);
+        await require('./init').run(stackName, s3BucketName);
     }
 
     // $ kelch create-resoure
@@ -92,30 +92,30 @@ Commands:
             this.usage();
             return;
         }
-        await require('./commands/create-resource').run(resourceName);
+        await require('./create-resource').run(resourceName);
     }
 
     // $ kelch create-config
     async createConfig() {
-        await require('./commands/create-config').run();
+        await require('./create-config').run();
     }
 
     // $ kelch update-config
     async updateConfig() {
-        await require('./commands/update-config').run();
+        await require('./update-config').run();
     }
 
     // $ kelch deloy
     async deploy() {
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
-        await require('./commands/deploy').run(stackName, s3BucketName);
+        await require('./deploy').run(stackName, s3BucketName);
     }
 
     // $ kelch delete
     async del() {
         var stackName = this.getStackName();
-        await require('./commands/delete').run(stackName);
+        await require('./delete').run(stackName);
     }
 
     // プログラム実行時に指定されたコマンドを返す

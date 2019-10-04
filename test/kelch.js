@@ -4,7 +4,7 @@ const assert = chai.assert;
 
 describe('kelch.js', function () {
 
-    const Kelch = require('../kelch.js');
+    const Kelch = require('../src/kelch.js');
 
     it('getCommand', async () => {
         var argv = ['node', 'kelch', 'deploy'];

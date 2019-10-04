@@ -4,9 +4,9 @@ const fs = require('fs-extra');
 const expect = chai.expect;
 const assert = chai.assert;
 
-describe('commands/deploy.js', function () {
+describe('deploy.js', function () {
 
-    var app = require('../commands/deploy');
+    var app = require('../src/deploy');
     const stackName = 'kelch-test';
 
     it('createTeamplte', async () => {
