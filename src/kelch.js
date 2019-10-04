@@ -80,9 +80,11 @@ Commands:
 
     // $ kelch init
     async init() {
+        const KelchInit = require('./init');
+        var kelchInit = new KelchInit();
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
-        await require('./init').run(stackName, s3BucketName);
+        await kelchInit.init(stackName, s3BucketName);
     }
 
     // $ kelch create-resoure
@@ -116,7 +118,7 @@ Commands:
 
     // $ kelch delete
     async del() {
-        const KelchDelete = require('./deploy');
+        const KelchDelete = require('./delete');
         var kelchDelete = new KelchDelete();
         var stackName = this.getStackName();
         await kelchDelete.deleteStack(stackName);
