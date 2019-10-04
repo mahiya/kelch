@@ -1,6 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
-const common = require('./common');
+const KelchCommon = require('./common');
 const KelchCommand = require('./command');
 const KelchDeploy = require('./deploy');
 
@@ -167,7 +167,7 @@ Commands:
             return this.config['stackName'];
         }
 
-        return common.getCurrentDirName();
+        return KelchCommon.getCurrentDirName();
     }
 
     getS3BucketName() {
@@ -178,7 +178,7 @@ Commands:
             return this.config['s3BucketName'];
         }
 
-        return common.getCurrentDirName();
+        return KelchCommon.getCurrentDirName();
     }
 
     getConfig(configPath) {

@@ -1,9 +1,9 @@
 const fs = require('fs-extra');
 const path = require('path');
-const common = require('./common');
+const KelchCommon = require('./common');
 
 const AWS = require('aws-sdk');
-AWS.config.region = common.getRegion();
+AWS.config.region = KelchCommon.getRegion();
 
 module.exports = class KelchDeploy {
 
@@ -150,8 +150,8 @@ module.exports = class KelchDeploy {
 
     // AWS CloudFormation スタックをデプロイする
     async deployStack(templateFilePath, stackName, bucketName) {
-        await common.exec('aws cloudformation package --template-file ' + templateFilePath + ' --output-template-file ' + templateFilePath + ' --s3-bucket ' + bucketName + ' --use-json');
-        await common.exec('aws cloudformation deploy --template-file ' + templateFilePath + ' --stack-name ' + stackName + ' --capabilities CAPABILITY_IAM');
+        await KelchCommon.exec('aws cloudformation package --template-file ' + templateFilePath + ' --output-template-file ' + templateFilePath + ' --s3-bucket ' + bucketName + ' --use-json');
+        await KelchCommon.exec('aws cloudformation deploy --template-file ' + templateFilePath + ' --stack-name ' + stackName + ' --capabilities CAPABILITY_IAM');
     }
 
     // テンプレートで設定されたFunctionのAPIパス一覧を返す

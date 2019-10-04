@@ -1,3 +1,5 @@
+const KelchCommon = require('./common');
+
 module.exports = class KelchCommand {
 
     async init() {
@@ -14,7 +16,7 @@ module.exports = class KelchCommand {
     async createConfig() {
         var parameters = await fs.readJSON(path.join(__dirname, 'template', 'config-template.json'));
 
-        var dirName = common.getCurrentDirName();
+        var dirName = KelchCommon.getCurrentDirName();
         parameters['stackName'] = dirName;
         parameters['s3BucketName'] = dirName;
 
@@ -31,7 +33,7 @@ module.exports = class KelchCommand {
     }
 
     async deleteStack(stackName) {
-        await common.exec('aws cloudformation delete-stack --stack-name ' + stackName);
+        await KelchCommon.exec('aws cloudformation delete-stack --stack-name ' + stackName);
     }
 
 }
