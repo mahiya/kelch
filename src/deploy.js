@@ -61,7 +61,7 @@ module.exports = class KelchDeploy {
     async createTeamplte(userCodesPath) {
 
         // Read template file of AWS CloudFormation template
-        var template = await fs.readJSON(path.join(__dirname, 'base-template.json'));
+        var template = await fs.readJSON(path.join(__dirname, 'template', 'cloudformation-template-base.json'));
 
         // Read the code that will be attached with user's codes
         var handlerCode = await fs.readFile(path.join(__dirname, 'handler.js'), { encoding: 'utf-8' });

@@ -6,13 +6,13 @@ module.exports = class KelchCommand {
     }
 
     async createResource(resourceName) {
-        const templateCodePath = path.join(__dirname, 'create-resource-template.js');
+        const templateCodePath = path.join(__dirname, 'template', 'resource-template.js');
         var templateCode = await fs.readFile(templateCodePath, { encoding: 'utf-8' });
         await fs.writeFile(resourceName + '.js', templateCode);
     }
 
     async createConfig() {
-        var parameters = await fs.readJSON(path.join(__dirname, 'create-config-template.json'));
+        var parameters = await fs.readJSON(path.join(__dirname, 'template', 'config-template.json'));
 
         var dirName = common.getCurrentDirName();
         parameters['stackName'] = dirName;
