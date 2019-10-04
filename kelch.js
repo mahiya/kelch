@@ -3,9 +3,11 @@ const path = require('path');
 const common = require('./commands/common');
 
 module.exports = class Kelch {
-    constructor(argv) {
-        this.argv = argv;
-        this.cachedParameters = null;
+
+    constructor(argv, configFilePath = path.join('.', 'kelch-config.json')) {
+        this.command = this.getCommand(argv);
+        this.parameters = this.getParameters(argv);
+        this.config = common.getConfig(configFilePath);
     }
 
     async run() {
@@ -15,13 +17,12 @@ module.exports = class Kelch {
             return;
         }
 
-        var command = this.getCommand();
-        if (this.checkParameterIsExists('--help') || command == null) {
+        if (this.checkParameterIsExists('--help') || this.command == null) {
             this.usage();
             return;
         }
 
-        switch (command) {
+        switch (this.command) {
             case 'init':
                 await this.init()
                 break;
@@ -118,47 +119,43 @@ Commands:
     }
 
     // プログラム実行時に指定されたコマンドを返す
-    getCommand() {
-        return this.argv.length < 2 ? null : this.argv[2];
+    getCommand(argv) {
+        return argv.length < 2 ? null : argv[2];
+    }
+
+    // プログラム実行時に入力されたパラメータを返す
+    getParameters(argv) {
+        var parameters = {};
+        for (var i = 0; i < argv.length; i++) {
+            if (!argv[i].startsWith('--')) continue;
+            if (i + 1 < argv.length && !argv[i + 1].startsWith('--')) {
+                parameters[argv[i]] = argv[i + 1];
+                i++;
+            } else {
+                parameters[argv[i]] = '';
+            }
+        }
+        return parameters;
     }
 
     // 指定されたパラメータの値を返す。指定していない場合はデフォルト値を返す
     getParameter(parameterName, defaultValue = null) {
-        var parameters = this.getParameters();
-        return parameters[parameterName] == undefined
+        return this.parameters[parameterName] == undefined
             ? defaultValue
-            : parameters[parameterName];
+            : this.parameters[parameterName];
     }
 
     // 指定されたパラメータが入力されているかを返す
     checkParameterIsExists(parameterName) {
-        return this.getParameters()[parameterName] != undefined;
-    }
-
-    // プログラム実行時に入力されたパラメータを返す
-    getParameters() {
-        if (!this.cachedParameters) {
-            this.cachedParameters = {};
-            for (var i = 0; i < this.argv.length; i++) {
-                if (!this.argv[i].startsWith('--')) continue;
-                if (i + 1 < this.argv.length && !this.argv[i + 1].startsWith('--')) {
-                    this.cachedParameters[this.argv[i]] = this.argv[i + 1];
-                    i++;
-                } else {
-                    this.cachedParameters[this.argv[i]] = '';
-                }
-            }
-        }
-        return this.cachedParameters;
+        return this.parameters[parameterName] != undefined;
     }
 
     getStackName() {
         var stackName = this.getParameter("--stack-name");
         if (stackName != null) return stackName;
 
-        var config = common.getConfig();
-        if (config['stackName']) {
-            return config['stackName'];
+        if (this.config['stackName']) {
+            return this.config['stackName'];
         }
 
         return common.getCurrentDirName();
@@ -168,9 +165,8 @@ Commands:
         var bucketName = this.getParameter("--s3-bucket");
         if (bucketName != null) return bucketName;
 
-        var config = common.getConfig();
-        if (config['s3BucketName']) {
-            return config['s3BucketName'];
+        if (this.config['s3BucketName']) {
+            return this.config['s3BucketName'];
         }
 
         return common.getCurrentDirName();

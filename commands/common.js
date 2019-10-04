@@ -44,15 +44,10 @@ exports.getCurrentDirName = () => {
     return path.basename(process.cwd());
 }
 
-var _config;
-exports.getConfig = () => {
-    if (!_config) {
-        var configPath = path.join('.', 'kelch-config.json');
-        if (fs.existsSync(configPath)) {
-            _config = fs.readJSONSync(configPath);
-        } else {
-            _config = {};
-        }
+exports.getConfig = (configPath) => {
+    if (fs.existsSync(configPath)) {
+        return fs.readJSONSync(configPath);
+    } else {
+        return {};
     }
-    return _config;
 }
