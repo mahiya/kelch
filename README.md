@@ -1,7 +1,7 @@
 # Kelch
 Kelch enables you to build REST API incredibly easily using JavaScript and AWS Serverless Application Model. Kelch deploys your REST API codes written by JavaScript to AWS Lambda and deploys and configs AWS API Gateway.
 
-![Kelch architecture](https://github.com/mahiya/kelch-alpha/raw/master/doc/image.png "Kelch architecture")
+![Kelch architecture](https://github.com/mahiya/kelch-alpha/raw/master/doc/architecture.png "Kelch architecture")
 
 You can use Kelch and deploy your REST API code to your AWS account by following steps.
 
