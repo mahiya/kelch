@@ -107,17 +107,19 @@ Commands:
 
     // $ kelch deloy
     async deploy() {
-        var stackName = this.getStackName();
-        var s3BucketName = this.getS3BucketName();
         const KelchDeploy = require('./deploy');
         var kelchDeploy = new KelchDeploy();
+        var stackName = this.getStackName();
+        var s3BucketName = this.getS3BucketName();
         kelchDeploy.deploy(stackName, s3BucketName);
     }
 
     // $ kelch delete
     async del() {
+        const KelchDelete = require('./deploy');
+        var kelchDelete = new KelchDelete();
         var stackName = this.getStackName();
-        await require('./delete').run(stackName);
+        await kelchDelete.deleteStack(stackName);
     }
 
     // プログラム実行時に指定されたコマンドを返す

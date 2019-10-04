@@ -110,9 +110,6 @@ module.exports = class KelchDeploy {
                     Timeout: properties.timeout,
                     MemorySize: properties.memorySize,
                     Runtime: properties.runtime,
-                    //Enviroment: properties.enviroment,
-                    //Tags: properties.tags,
-                    //ReservedConcurrentExecutions: properties.concurrentExecutions
                     Events: {
                         APIGateway: {
                             Type: 'Api',
