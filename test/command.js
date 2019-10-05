@@ -24,11 +24,13 @@ describe('command.js', function () {
     });
 
     it('createResource', async () => {
-        await command.createResource('sample', workingDirPath);
-        assert.equal(fs.existsSync(path.join(workingDirPath, 'sample.js')), true, 'check: created resource file is exists');
+        const resourceName = 'create-resource-test';
+        await command.createResource(resourceName, workingDirPath);
+        assert.equal(fs.existsSync(path.join(workingDirPath, resourceName + '.js')), true, 'check: created resource file is exists');
     });
 
     it('createConfig', async () => {
+
     });
 
     it('updateConfig', async () => {
