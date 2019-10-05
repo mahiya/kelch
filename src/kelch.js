@@ -82,10 +82,9 @@ Commands:
     // $ kelch init
     async init() {
         const KelchCommand = require('./command');
-        var kelchCommand = new KelchCommand();
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
-        await kelchCommand.init(stackName, s3BucketName);
+        await KelchCommand.init(stackName, s3BucketName);
     }
 
     // $ kelch create-resoure
@@ -95,35 +94,30 @@ Commands:
             this.usage();
             return;
         }
-        var command = new KelchCommand();
-        await command.createResource(resourceName);
+        await KelchCommand.createResource(resourceName);
     }
 
     // $ kelch create-config
     async createConfig() {
-        var command = new KelchCommand();
-        await command.createConfig();
+        await KelchCommand.createConfig();
     }
 
     // $ kelch update-config
     async updateConfig() {
-        var command = new KelchCommand();
-        await command.updateConfig();
+        await KelchCommand.updateConfig();
     }
 
     // $ kelch deloy
     async deploy() {
-        var command = new KelchCommand();
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
-        command.deploy(stackName, s3BucketName);
+        KelchCommand.deploy(stackName, s3BucketName);
     }
 
     // $ kelch delete
     async del() {
-        var command = new KelchCommand();
         var stackName = this.getStackName();
-        await command.deleteStack(stackName);
+        await KelchCommand.deleteStack(stackName);
     }
 
     // プログラム実行時に指定されたコマンドを返す

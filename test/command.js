@@ -8,7 +8,6 @@ const assert = chai.assert;
 describe('command.js', function () {
 
     const KelchCommand = require('../src/command.js');
-    var command = new KelchCommand();
 
     const workingDirPath = path.join('.', 'test', '.work');
     beforeEach(async () => {
@@ -23,14 +22,14 @@ describe('command.js', function () {
     it('init', async () => {
         const userCodesPath = path.join('test', 'sample-project');
         const configFilePath = path.join(workingDirPath, 'kelch-config.json');
-        await command.init(userCodesPath, workingDirPath);
+        await KelchCommand.init(userCodesPath, workingDirPath);
         assert.equal(fs.existsSync(path.join(workingDirPath, 'sample.js')), true, 'check: created resource file is exists');
         assert.equal(fs.existsSync(configFilePath), true, 'check: created config file is exists');
     });
 
     it('createResource', async () => {
         const resourceName = 'create-resource-test';
-        await command.createResource(resourceName, workingDirPath);
+        await KelchCommand.createResource(resourceName, workingDirPath);
         assert.equal(fs.existsSync(path.join(workingDirPath, resourceName + '.js')), true, 'check: created resource file is exists');
     });
 
@@ -39,7 +38,7 @@ describe('command.js', function () {
         const configFilePath = path.join(workingDirPath, 'kelch-config.json');
         const dirName = path.basename(process.cwd());
 
-        await command.createConfig(userCodesPath, workingDirPath);
+        await KelchCommand.createConfig(userCodesPath, workingDirPath);
         assert.equal(fs.existsSync(configFilePath), true, 'check: created config file is exists');
 
         var config = await fs.readJSON(configFilePath);

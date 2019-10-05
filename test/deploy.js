@@ -71,19 +71,5 @@ describe('deploy.js', function () {
         await kelchDeploy.displayEndpoint(stackName, ['/test', '/test/todo']);
     });
 
-    it('getStackOutput', async () => {
-        var kelchDeploy = new KelchDeploy();
-        var result = await kelchDeploy.getStackOutput(stackName);
-        assert.typeOf(result, 'object', 'check: type of result');
-        assert.property(result, 'KelchAPIGatewayOutput', 'check: having property "KelchAPIGatewayOutput"');
-    });
-
-    it('getStackInfo', async () => {
-        var kelchDeploy = new KelchDeploy();
-        var result = await kelchDeploy.getStackInfo(stackName);
-        assert.typeOf(result, 'object', 'check: type of result');
-        assert.property(result, 'StackId', 'check: having property "StackId"');
-    });
-
 });
 
