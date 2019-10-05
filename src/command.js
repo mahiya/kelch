@@ -4,9 +4,9 @@ const path = require('path');
 
 module.exports = class KelchCommand {
 
-    async init() {
-        await this.createResource('sample');
-        await this.createConfig();
+    async init(userCodesPath = '.', destDirPath = '.') {
+        await this.createResource('sample', destDirPath);
+        await this.createConfig(userCodesPath, destDirPath);
     }
 
     async createResource(resourceName, destDirPath = '.') {

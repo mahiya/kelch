@@ -11,16 +11,21 @@ describe('command.js', function () {
     var command = new KelchCommand();
 
     const workingDirPath = path.join('.', 'test', '.work');
-    before(async () => {
+    beforeEach(async () => {
         await fs.remove(workingDirPath);
         await fs.mkdir(workingDirPath);
     });
 
-    after(async () => {
+    afterEach(async () => {
         await fs.remove(workingDirPath);
     });
 
     it('init', async () => {
+        const userCodesPath = path.join('test', 'sample-project');
+        const configFilePath = path.join(workingDirPath, 'kelch-config.json');
+        await command.init(userCodesPath, workingDirPath);
+        assert.equal(fs.existsSync(path.join(workingDirPath, 'sample.js')), true, 'check: created resource file is exists');
+        assert.equal(fs.existsSync(configFilePath), true, 'check: created config file is exists');
     });
 
     it('createResource', async () => {
