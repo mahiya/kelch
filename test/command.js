@@ -59,8 +59,5 @@ describe('command.js', function () {
     it('updateConfig', async () => {
     });
 
-    it('deleteStack', async () => {
-    });
-
 });
 

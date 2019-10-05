@@ -1,6 +1,7 @@
 const KelchCommon = require('./common');
 const fs = require('fs-extra');
 const path = require('path');
+const CloudFormationClient = require('./cloudFormationClient');
 
 module.exports = class KelchCommand {
 
@@ -37,8 +38,14 @@ module.exports = class KelchCommand {
 
     }
 
+
+    async deploy(stackName, s3BucketName) {
+        var kelchDeploy = new KelchDeploy();
+        kelchDeploy.deploy(stackName, s3BucketName);
+    }
+
     async deleteStack(stackName) {
-        await KelchCommon.exec('aws cloudformation delete-stack --stack-name ' + stackName);
+        await CloudFormationClient.deleteStack(stackName);
     }
 
 }

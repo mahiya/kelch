@@ -2,7 +2,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const KelchCommon = require('./common');
 const KelchCommand = require('./command');
-const KelchDeploy = require('./deploy');
 
 module.exports = class Kelch {
 
@@ -114,10 +113,10 @@ Commands:
 
     // $ kelch deloy
     async deploy() {
-        var kelchDeploy = new KelchDeploy();
+        var command = new KelchCommand();
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
-        kelchDeploy.deploy(stackName, s3BucketName);
+        command.deploy(stackName, s3BucketName);
     }
 
     // $ kelch delete

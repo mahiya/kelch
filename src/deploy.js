@@ -1,9 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
-const KelchCommon = require('./common');
-
-const AWS = require('aws-sdk');
-AWS.config.region = KelchCommon.getRegion();
+const CloudFormationClient = require('./cloudFormationClient');
 
 module.exports = class KelchDeploy {
 
@@ -15,9 +12,8 @@ module.exports = class KelchDeploy {
     async deploy(stackName, bucketName) {
         try {
 
-            // デプロイ前に作業フォルダとFunctionコードアップロード先のS3バケットを差k末井する
+            // デプロイ用に作業フォルダを作成する
             await this.createWorkingDirectory();
-            await this.createBucketIfNotExists(bucketName);
 
             // AWS CloudFormation テンプレートを生成してファイル出力する
             const userCodesPath = '.';
@@ -27,7 +23,7 @@ module.exports = class KelchDeploy {
             await this.outputTemplateFile(template, templateFilePath)
 
             // AWS CloudFormation スタックをデプロイする            
-            await this.deployStack(templateFilePath, stackName, bucketName);
+            await CloudFormationClient.deployStack(templateFilePath, stackName, bucketName);
             var apiPaths = this.listFunctionsApiPath(template);
             await this.displayEndpoint(stackName, apiPaths);
 
@@ -43,19 +39,6 @@ module.exports = class KelchDeploy {
     async createWorkingDirectory() {
         await fs.remove(this.workingDirPath);
         await fs.mkdir(this.workingDirPath);
-    }
-
-    // 指定したS3バケットが存在しない場合は作成する
-    async createBucketIfNotExists(bucketName) {
-        var s3 = new AWS.S3();
-        try {
-            await s3.headBucket({ Bucket: bucketName }).promise();
-        } catch (e) {
-            if (e.statusCode != 404) throw e;
-            // HTTP status code が 404 の場合は存在しないので作成する
-            console.log("Creating S3 bucket '%s'", bucketName);
-            await s3.createBucket({ Bucket: bucketName }).promise();
-        }
     }
 
     async createTeamplte(userCodesPath) {
@@ -148,12 +131,6 @@ module.exports = class KelchDeploy {
         }
     }
 
-    // AWS CloudFormation スタックをデプロイする
-    async deployStack(templateFilePath, stackName, bucketName) {
-        await KelchCommon.exec('aws cloudformation package --template-file ' + templateFilePath + ' --output-template-file ' + templateFilePath + ' --s3-bucket ' + bucketName + ' --use-json');
-        await KelchCommon.exec('aws cloudformation deploy --template-file ' + templateFilePath + ' --stack-name ' + stackName + ' --capabilities CAPABILITY_IAM');
-    }
-
     // テンプレートで設定されたFunctionのAPIパス一覧を返す
     listFunctionsApiPath(template) {
         var apiPaths = [];
@@ -167,29 +144,12 @@ module.exports = class KelchDeploy {
 
     // 生成した API Gateway のエンドポイントを表示する
     async displayEndpoint(stackName, apiPaths) {
-        var outputs = await this.getStackOutput(stackName);
+        var outputs = await CloudFormationClient.getStackOutput(stackName);
         var endpoint = outputs['KelchAPIGatewayOutput'];
         if (!endpoint) return;
         console.log('REST APIs URL:');
         apiPaths.forEach(apiPath => console.log(endpoint + apiPath.replace('/', '')));
         console.log('');
-    }
-
-    // 指定したAWS CloudFormation Stack の Outputs の値を返す
-    async getStackOutput(stackName) {
-        var stack = await this.getStackInfo(stackName);
-        var outputs = {};
-        stack['Outputs'].forEach(output => {
-            outputs[output.OutputKey] = output.OutputValue;
-        })
-        return outputs;
-    }
-
-    // 指定したAWS CloudFormation Stack 情報を返す
-    async getStackInfo(stackName) {
-        var client = new AWS.CloudFormation();
-        var stacks = await client.describeStacks({ StackName: stackName }).promise();
-        return stacks['Stacks'][0];
     }
 
     // 作業用一時フォルダを削除する
