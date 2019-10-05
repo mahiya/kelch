@@ -16,19 +16,21 @@ module.exports = class KelchCommand {
         await fs.writeFile(newFilePath, templateCode);
     }
 
-    async createConfig() {
+    async createConfig(userCodesPath = '.', destDirPath = '.') {
         var parameters = await fs.readJSON(path.join(__dirname, 'template', 'config-template.json'));
 
         var dirName = KelchCommon.getCurrentDirName();
         parameters['stackName'] = dirName;
         parameters['s3BucketName'] = dirName;
 
-        var files = (await fs.readdir('.')).filter(file => path.extname(file).toLowerCase() == '.js');
+        var files = (await fs.readdir(userCodesPath)).filter(file => path.extname(file).toLowerCase() == '.js');
         for (var i = 0; i < files.length; i++) {
             parameters['functions'][files[i]] = {};
         }
 
-        await fs.writeFileSync('kelch-config.json', JSON.stringify(parameters, null, 2));
+        const configFileName = 'kelch-config.json';
+        var configFilePath = path.join(destDirPath, configFileName);
+        await fs.writeFileSync(configFilePath, JSON.stringify(parameters, null, 2));
     }
 
     async updateConfig() {
