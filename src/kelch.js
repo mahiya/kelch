@@ -1,6 +1,5 @@
 const fs = require('fs-extra');
 const path = require('path');
-const KelchCommon = require('./common');
 const KelchCommand = require('./command');
 
 module.exports = class Kelch {
