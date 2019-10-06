@@ -81,7 +81,6 @@ Commands:
 
     // $ kelch init
     async init() {
-        const KelchCommand = require('./command');
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
         await KelchCommand.init(stackName, s3BucketName);
