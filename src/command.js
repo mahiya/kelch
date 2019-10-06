@@ -17,12 +17,10 @@ module.exports = class KelchCommand {
         await fs.writeFile(newFilePath, templateCode);
     }
 
-    static async createConfig(userCodesPath = '.', destDirPath = '.') {
+    static async createConfig(stackName, s3BucketName, userCodesPath = '.', destDirPath = '.') {
         var parameters = await fs.readJSON(path.join(__dirname, 'template', 'config-template.json'));
-
-        var dirName = KelchCommon.getCurrentDirName();
-        parameters['stackName'] = dirName;
-        parameters['s3BucketName'] = dirName;
+        parameters['stackName'] = stackName;
+        parameters['s3BucketName'] = s3BucketName;
 
         var files = (await fs.readdir(userCodesPath)).filter(file => path.extname(file).toLowerCase() == '.js');
         for (var i = 0; i < files.length; i++) {

@@ -40,9 +40,4 @@ module.exports = class KelchCommon {
         return null;
     }
 
-    // コマンドを実行したディレクトリの名前を返す
-    static getCurrentDirName() {
-        return path.basename(process.cwd());
-    }
-
 }

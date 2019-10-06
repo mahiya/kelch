@@ -99,7 +99,9 @@ Commands:
 
     // $ kelch create-config
     async createConfig() {
-        await KelchCommand.createConfig();
+        var stackName = this.getStackName();
+        var s3BucketName = this.getS3BucketName();
+        await KelchCommand.createConfig(stackName, s3BucketName);
     }
 
     // $ kelch update-config
@@ -160,7 +162,7 @@ Commands:
             return this.config['stackName'];
         }
 
-        return KelchCommon.getCurrentDirName();
+        return this.getCurrentDirName();
     }
 
     getS3BucketName() {
@@ -171,7 +173,7 @@ Commands:
             return this.config['s3BucketName'];
         }
 
-        return KelchCommon.getCurrentDirName();
+        return this.getCurrentDirName();
     }
 
     getConfig(configPath) {
@@ -181,4 +183,10 @@ Commands:
             return {};
         }
     }
+
+    // コマンドを実行したディレクトリの名前を返す
+    getCurrentDirName() {
+        return path.basename(process.cwd());
+    }
+
 }
