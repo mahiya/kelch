@@ -1,4 +1,5 @@
 const KelchCommon = require('./common');
+const KelchDeploy = require('./deploy')
 const fs = require('fs-extra');
 const path = require('path');
 const CloudFormationClient = require('./cloudFormationClient');
