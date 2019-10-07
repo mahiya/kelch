@@ -34,7 +34,7 @@ exports.handler = async (event) => {
     }
 
     function response(statusCode, body) {
-        if (body.statusCode) {
+        if (body && body.statusCode) {
             return body;
         } else {
             return {
