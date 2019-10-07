@@ -38,8 +38,8 @@ module.exports = class KelchCommand {
     }
 
 
-    static async deploy(stackName, s3BucketName) {
-        var kelchDeploy = new KelchDeploy();
+    static async deploy(config, stackName, s3BucketName) {
+        var kelchDeploy = new KelchDeploy(config);
         kelchDeploy.deploy(stackName, s3BucketName);
     }
 
