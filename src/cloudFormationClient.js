@@ -6,7 +6,7 @@ module.exports = class CloudFormationClient {
 
     // AWS CloudFormation スタックをデプロイする
     static async deployStack(templateFilePath, stackName, bucketName) {
-        await createBucketIfNotExists(bucketName);
+        await this.createBucketIfNotExists(bucketName);
         await KelchCommon.exec('aws cloudformation package --template-file ' + templateFilePath + ' --output-template-file ' + templateFilePath + ' --s3-bucket ' + bucketName + ' --use-json');
         await KelchCommon.exec('aws cloudformation deploy --template-file ' + templateFilePath + ' --stack-name ' + stackName + ' --capabilities CAPABILITY_IAM');
     }
