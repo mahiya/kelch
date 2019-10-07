@@ -80,9 +80,7 @@ Commands:
 
     // $ kelch init
     async init() {
-        var stackName = this.getStackName();
-        var s3BucketName = this.getS3BucketName();
-        await KelchCommand.init(stackName, s3BucketName);
+        await KelchCommand.init();
     }
 
     // $ kelch create-resoure
