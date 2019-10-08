@@ -109,7 +109,7 @@ Commands:
     async deploy() {
         var stackName = this.getStackName();
         var s3BucketName = this.getS3BucketName();
-        KelchCommand.deploy(this.config, stackName, s3BucketName);
+        await KelchCommand.deploy(this.config, stackName, s3BucketName);
     }
 
     // $ kelch delete
