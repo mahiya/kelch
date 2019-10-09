@@ -20,7 +20,8 @@ $ mkdir kelch-sample && cd kelch-sample
 ### Generate a sample code and config file:
 ```sh
 $ kelch init
-
+```
+```sh
 $ ls
 kelch-config.json       sample.js
 ```
