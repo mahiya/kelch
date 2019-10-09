@@ -14,23 +14,27 @@ exports.handler = async (event) => {
     };
 
     if (event.httpMethod == "GET") {
-        if (typeof get != 'function')
-            return response(405);
-        return response(200, await get(req));
+        if (typeof get != 'function') return response(405);
+        var resp = isAsyncFunction(get) ? await get(req) : get(req);
+        return response(200, resp);
     } else if (event.httpMethod == "POST") {
-        if (typeof post != 'function')
-            return response(405);
-        return response(200, await post(req));
+        if (typeof post != 'function') return response(405);
+        var resp = isAsyncFunction(post) ? await post(req) : post(req);
+        return response(200, resp);
     } else if (event.httpMethod == "PUT") {
-        if (typeof put != 'function')
-            return response(405);
-        return response(200, await put(req));
+        if (typeof put != 'function') return response(405);
+        var resp = isAsyncFunction(put) ? await put(req) : put(req);
+        return response(200, resp);
     } else if (event.httpMethod == "DELETE") {
-        if (typeof del != 'function')
-            return response(405);
-        return response(200, await post(req));
+        if (typeof del != 'function') return response(405);
+        var resp = isAsyncFunction(del) ? await del(req) : del(req);
+        return response(200, resp);
     } else {
         return response(405);
+    }
+
+    function isAsyncFunction(func) {
+        return func.constructor.name == "AsyncFunction";
     }
 
     function response(statusCode, body) {
