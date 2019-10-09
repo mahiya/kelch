@@ -139,7 +139,8 @@ module.exports = class KelchDeploy {
     }
 
     getFunctionPolicies(functionName) {
-        var resources = this.getFunctionParameter(functionName, 'policies');
+        var resources = this.getFunctionParameter(functionName, 'policies', []);
+        if (resources.length == 0) return [];
         var policies = [{
             Version: '2012-10-17',
             Statement: []
