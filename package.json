@@ -32,7 +32,6 @@
         "mocha": "^6.1.4"
     },
     "scripts": {
-        "test": "mocha ./test",
-        "integration-test": "mocha ./integration-test --timeout 300000"
+        "test": "mocha ./test"
     }
 }
