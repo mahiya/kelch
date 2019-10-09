@@ -2,7 +2,7 @@ const KelchCommon = require('./common');
 const KelchDeploy = require('./deploy')
 const fs = require('fs-extra');
 const path = require('path');
-const CloudFormationClient = require('./cloudFormationClient');
+const AWSClient = require('./awsClient');
 
 module.exports = class KelchCommand {
 
@@ -48,7 +48,7 @@ module.exports = class KelchCommand {
     }
 
     static async deleteStack(stackName) {
-        await CloudFormationClient.deleteStack(stackName);
+        await AWSClient.deleteStack(stackName);
     }
 
 }

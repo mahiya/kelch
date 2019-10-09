@@ -1,6 +1,6 @@
 const fs = require('fs-extra');
 const path = require('path');
-const CloudFormationClient = require('./cloudFormationClient');
+const AWSClient = require('./awsClient');
 
 module.exports = class KelchDeploy {
 
@@ -23,7 +23,7 @@ module.exports = class KelchDeploy {
             await this.outputTemplateFile(template, templateFilePath)
 
             // AWS CloudFormation スタックをデプロイする            
-            await CloudFormationClient.deployStack(templateFilePath, stackName, bucketName);
+            await AWSClient.deployStack(templateFilePath, stackName, bucketName);
             var apiPaths = this.listFunctionsApiPath(template);
             await this.displayEndpoint(stackName, apiPaths);
 
@@ -173,7 +173,7 @@ module.exports = class KelchDeploy {
 
     // 生成した API Gateway のエンドポイントを表示する
     async displayEndpoint(stackName, apiPaths) {
-        var outputs = await CloudFormationClient.getStackOutput(stackName);
+        var outputs = await AWSClient.getStackOutput(stackName);
         var endpoint = outputs['KelchAPIGatewayOutput'];
         if (!endpoint) return;
         console.log('REST APIs URL:');

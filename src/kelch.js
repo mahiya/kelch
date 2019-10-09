@@ -1,7 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const KelchCommand = require('./command');
-const AWSClient = require('./cloudFormationClient');
+const AWSClient = require('./awsClient');
 
 module.exports = class Kelch {
 

@@ -2,7 +2,7 @@ const KelchCommon = require('./common');
 const AWS = require('aws-sdk');
 AWS.config.region = KelchCommon.getRegion();
 
-module.exports = class CloudFormationClient {
+module.exports = class AWSClient {
 
     // AWS CloudFormation スタックをデプロイする
     static async deployStack(templateFilePath, stackName, bucketName) {
