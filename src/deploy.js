@@ -78,9 +78,10 @@ module.exports = class KelchDeploy {
 
             // 関数の設定を定義する
             var properties = {
-                "timeout": this.getFunctionParameter(fileName, 'timeout', 3),
-                "memorySize": this.getFunctionParameter(fileName, 'memorySize', 128),
-                "runtime": this.getFunctionParameter(fileName, 'runtime', 'nodejs8.10'),
+                timeout: this.getFunctionParameter(fileName, 'timeout', 3),
+                memorySize: this.getFunctionParameter(fileName, 'memorySize', 128),
+                runtime: this.getFunctionParameter(fileName, 'runtime', 'nodejs8.10'),
+                enviroments: this.getFunctionParameter(fileName, 'enviroments', {}),
             };
 
             // ResourcesにLambda Function リソースを追加する
@@ -93,6 +94,9 @@ module.exports = class KelchDeploy {
                     Timeout: properties.timeout,
                     MemorySize: properties.memorySize,
                     Runtime: properties.runtime,
+                    Environment: {
+                        Variables: properties.enviroments
+                    },
                     Events: {
                         APIGateway: {
                             Type: 'Api',
@@ -108,7 +112,6 @@ module.exports = class KelchDeploy {
                 }
             };
         }
-
         return template;
     }
 

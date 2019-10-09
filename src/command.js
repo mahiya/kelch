@@ -25,7 +25,11 @@ module.exports = class KelchCommand {
 
         var files = (await fs.readdir(userCodesPath)).filter(file => path.extname(file).toLowerCase() == '.js');
         for (var i = 0; i < files.length; i++) {
-            parameters['functions'][files[i]] = {};
+            parameters['functions'][files[i]] = {
+                enviroments: {
+                    key: "value"
+                }
+            };
         }
 
         const configFileName = 'kelch-config.json';
