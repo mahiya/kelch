@@ -20,9 +20,11 @@ describe('command.js', function () {
     });
 
     it('init', async () => {
+        const stackName = 'kelch-test-stack';
+        const s3BucketName = 'kelch-test-bucket';
         const userCodesPath = path.join('test', 'sample-project');
         const configFilePath = path.join(workingDirPath, 'kelch-config.json');
-        await KelchCommand.init(userCodesPath, workingDirPath);
+        await KelchCommand.init(stackName, s3BucketName, userCodesPath, workingDirPath);
         assert.equal(fs.existsSync(path.join(workingDirPath, 'sample.js')), true, 'check: created resource file is exists');
         assert.equal(fs.existsSync(configFilePath), true, 'check: created config file is exists');
     });
@@ -34,18 +36,19 @@ describe('command.js', function () {
     });
 
     it('createConfig', async () => {
+        const stackName = 'kelch-test-stack';
+        const s3BucketName = 'kelch-test-bucket';
         const userCodesPath = path.join('test', 'sample-project');
         const configFilePath = path.join(workingDirPath, 'kelch-config.json');
-        const dirName = path.basename(process.cwd());
 
-        await KelchCommand.createConfig(userCodesPath, workingDirPath);
+        await KelchCommand.createConfig(stackName, s3BucketName, userCodesPath, workingDirPath);
         assert.equal(fs.existsSync(configFilePath), true, 'check: created config file is exists');
 
         var config = await fs.readJSON(configFilePath);
         assert.property(config, 'stackName', 'check: config has property "stackName"');
-        assert.equal(config.stackName, dirName, 'check: stackName value');
+        assert.equal(config.stackName, stackName, 'check: stackName value');
         assert.property(config, 's3BucketName', 'check: config has property "s3BucketName"');
-        assert.equal(config.s3BucketName, dirName, 'check: s3BucketName value');
+        assert.equal(config.s3BucketName, s3BucketName, 'check: s3BucketName value');
         assert.property(config, 'default', 'check: config has property "default"');
         assert.property(config.default, 'timeout', 'check: config has property "timeout" at default');
         assert.property(config.default, 'memorySize', 'check: config has property "memorySize" at default');

@@ -6,9 +6,9 @@ const CloudFormationClient = require('./cloudFormationClient');
 
 module.exports = class KelchCommand {
 
-    static async init(userCodesPath = '.', destDirPath = '.') {
+    static async init(stackName, s3BucketName, userCodesPath = '.', destDirPath = '.') {
         await this.createResource('sample', destDirPath);
-        await this.createConfig(userCodesPath, destDirPath);
+        await this.createConfig(stackName, s3BucketName, userCodesPath, destDirPath);
     }
 
     static async createResource(resourceName, destDirPath = '.') {
