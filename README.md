@@ -56,14 +56,16 @@ Options:
 
 Commands:
     init
-        --stack-name    (optional, default: directory name)
-        --s3-bucket     (optional, default: directory name)
+        --stack-name    (optional)
+        --s3-bucket     (optional)
     create-resource
         --name          (required)
     create-config
+        --stack-name    (optional)
+        --s3-bucket     (optional)
     deploy
-        --stack-name    (optional, default: directory name)
-        --s3-bucket     (optional, default: directory name)
+        --stack-name    (optional)
+        --s3-bucket     (optional)
     delete
-        --stack-name    (optional, default: directory name)
+        --stack-name    (optional)
 ```
