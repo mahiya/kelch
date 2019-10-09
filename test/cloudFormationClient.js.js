@@ -4,7 +4,7 @@ const assert = chai.assert;
 
 describe('cloudFormationClient.js.js', function () {
 
-    const KelchDeploy = require('../src/deploy.js');
+    const CloudFormationClient = require('../src/cloudFormationClient.js');
     const stackName = 'kelch-test';
 
     before(async () => {
@@ -22,15 +22,13 @@ describe('cloudFormationClient.js.js', function () {
     });
 
     it('getStackOutput', async () => {
-        var kelchDeploy = new KelchDeploy();
-        var result = await kelchDeploy.getStackOutput(stackName);
+        var result = await CloudFormationClient.getStackOutput(stackName);
         assert.typeOf(result, 'object', 'check: type of result');
         assert.property(result, 'KelchAPIGatewayOutput', 'check: having property "KelchAPIGatewayOutput"');
     });
 
     it('getStackInfo', async () => {
-        var kelchDeploy = new KelchDeploy();
-        var result = await kelchDeploy.getStackInfo(stackName);
+        var result = await CloudFormationClient.getStackInfo(stackName);
         assert.typeOf(result, 'object', 'check: type of result');
         assert.property(result, 'StackId', 'check: having property "StackId"');
     });
