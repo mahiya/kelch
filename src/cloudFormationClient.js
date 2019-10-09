@@ -52,4 +52,10 @@ module.exports = class CloudFormationClient {
         return resp.Account;
     }
 
+    static async getDefaultS3BucketName() {
+        var awsAccountId = await this.getAccountId();
+        var defaultBucketName = 'kelch-lambda-code-' + awsAccountId;
+        return defaultBucketName;
+    }
+
 }

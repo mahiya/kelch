@@ -1,6 +1,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 const KelchCommand = require('./command');
+const AWSClient = require('./cloudFormationClient');
 
 module.exports = class Kelch {
 
@@ -83,7 +84,7 @@ Commands:
     // $ kelch init
     async init() {
         var stackName = this.getStackName();
-        var s3BucketName = this.getS3BucketName();
+        var s3BucketName = await this.getS3BucketName();
         await KelchCommand.init(stackName, s3BucketName);
     }
 
@@ -100,7 +101,7 @@ Commands:
     // $ kelch create-config
     async createConfig() {
         var stackName = this.getStackName();
-        var s3BucketName = this.getS3BucketName();
+        var s3BucketName = await this.getS3BucketName();
         await KelchCommand.createConfig(stackName, s3BucketName);
     }
 
@@ -112,7 +113,7 @@ Commands:
     // $ kelch deloy
     async deploy() {
         var stackName = this.getStackName();
-        var s3BucketName = this.getS3BucketName();
+        var s3BucketName = await this.getS3BucketName();
         await KelchCommand.deploy(this.config, stackName, s3BucketName);
     }
 
@@ -162,10 +163,11 @@ Commands:
             return this.config['stackName'];
         }
 
-        return this.getCurrentDirName();
+        var defaultStackName = this.getCurrentDirName();
+        return defaultStackName;
     }
 
-    getS3BucketName() {
+    async getS3BucketName() {
         var bucketName = this.getParameter("--s3-bucket");
         if (bucketName != null) return bucketName;
 
@@ -173,7 +175,8 @@ Commands:
             return this.config['s3BucketName'];
         }
 
-        return this.getCurrentDirName();
+        var defaultBucketName = await AWSClient.getDefaultS3BucketName();
+        return defaultBucketName;
     }
 
     getConfig(configPath) {
