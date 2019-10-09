@@ -18,6 +18,7 @@ describe('deploy.js', function () {
             var result = await kelchDeploy.createTeamplte('test/sample-project');
             assert.typeOf(result, 'object', 'check: type of result');
             assert.equal(result.Resources.testapi1.Properties.Environment.Variables.samplekey, 'samplevalue');
+            assert.equal(result.Resources.testapi1.Properties.Tags.sampletag, 'sampletagvalue');
         } finally {
             await kelchDeploy.deleteWorkingDirectory();
         }

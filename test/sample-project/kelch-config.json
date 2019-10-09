@@ -10,6 +10,9 @@
     "test-api-1.js": {
       "enviroments": {
         "samplekey": "samplevalue"
+      },
+      "tags": {
+        "sampletag": "sampletagvalue"
       }
     }
   }

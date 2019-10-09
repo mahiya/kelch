@@ -82,6 +82,7 @@ module.exports = class KelchDeploy {
                 memorySize: this.getFunctionParameter(fileName, 'memorySize', 128),
                 runtime: this.getFunctionParameter(fileName, 'runtime', 'nodejs8.10'),
                 enviroments: this.getFunctionParameter(fileName, 'enviroments', {}),
+                tags: this.getFunctionParameter(fileName, 'tags', {}),
             };
 
             // ResourcesにLambda Function リソースを追加する
@@ -97,6 +98,7 @@ module.exports = class KelchDeploy {
                     Environment: {
                         Variables: properties.enviroments
                     },
+                    Tags: properties.tags,
                     Events: {
                         APIGateway: {
                             Type: 'Api',
