@@ -81,6 +81,7 @@ module.exports = class KelchDeploy {
                 timeout: this.getFunctionParameter(fileName, 'timeout', 3),
                 memorySize: this.getFunctionParameter(fileName, 'memorySize', 128),
                 runtime: this.getFunctionParameter(fileName, 'runtime', 'nodejs8.10'),
+                policies: this.getFunctionPolicies(fileName),
                 enviroments: this.getFunctionParameter(fileName, 'enviroments', {}),
                 tags: this.getFunctionParameter(fileName, 'tags', {}),
                 reservedConcurrentExecutions: this.getFunctionParameter(fileName, 'reservedConcurrentExecutions', null),
@@ -96,6 +97,7 @@ module.exports = class KelchDeploy {
                     Timeout: properties.timeout,
                     MemorySize: properties.memorySize,
                     Runtime: properties.runtime,
+                    Policies: properties.policies,
                     Environment: {
                         Variables: properties.enviroments
                     },
@@ -122,11 +124,6 @@ module.exports = class KelchDeploy {
         return template;
     }
 
-    // 指定した AWS CloudFormation テンプレート(JSON)をファイルとして出力する
-    async outputTemplateFile(template, outputPath) {
-        await fs.writeFile(outputPath, JSON.stringify(template));
-    }
-
     // 設定ファイルでのFunctionごとの設定値を取得する
     getFunctionParameter(functionName, parameterName, defaultValue) {
         if (this.config['functions'] != null
@@ -139,6 +136,28 @@ module.exports = class KelchDeploy {
         } else {
             return defaultValue;
         }
+    }
+
+    getFunctionPolicies(functionName) {
+        var resources = this.getFunctionParameter(functionName, 'policies');
+        var policies = [{
+            Version: '2012-10-17',
+            Statement: []
+        }];
+        for (var resource in resources) {
+            var actions = resources[resource];
+            policies[0].Statement.push({
+                Effect: 'Allow',
+                Action: actions,
+                Resource: resource
+            });
+        }
+        return policies;
+    }
+
+    // 指定した AWS CloudFormation テンプレート(JSON)をファイルとして出力する
+    async outputTemplateFile(template, outputPath) {
+        await fs.writeFile(outputPath, JSON.stringify(template));
     }
 
     // テンプレートで設定されたFunctionのAPIパス一覧を返す
