@@ -38,7 +38,7 @@ function put(req) {
 ### Deploy created Rest APIs:
 ```sh
 $ kelch deploy
-
+...
 REST APIs URL:
 https://[api-gateway-no].execute-api.[aws-region].amazonaws.com/api/sample
 ```
@@ -48,7 +48,7 @@ API endpoint is defined according to file name (ex: deployed sample.js can be ac
 
 ## Command Help
 ```sh
-Usage: kelch [OPTIONS] COMMAND [ARGS]...
+Usage: kelch COMMAND [ARGS]...
 
 Options:
     --version

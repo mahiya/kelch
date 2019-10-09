@@ -50,7 +50,7 @@ module.exports = class Kelch {
     // $ kelch --help
     usage() {
         console.log(`
-Usage: kelch [OPTIONS] COMMAND [ARGS]...
+Usage: kelch COMMAND [ARGS]...
 
 Options:
     --version
