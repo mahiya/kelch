@@ -5,12 +5,12 @@ exports.handler = async (event) => {
         body: event.body,
         queryStringParameters: event.queryStringParameters,
         pathParameters: event.pathParameters,
-        cognitoUserId: event != undefined
-            && event.requestContext != undefined
-            && event.requestContext.authorizer != undefined
-            && event.requestContext.authorizer.claims != undefined
-            ? event.requestContext.authorizer.claims["cognito:username"]
-            : null,
+        // cognitoUserId: event != undefined
+        //     && event.requestContext != undefined
+        //     && event.requestContext.authorizer != undefined
+        //     && event.requestContext.authorizer.claims != undefined
+        //     ? event.requestContext.authorizer.claims["cognito:username"]
+        //     : null,
     };
 
     if (event.httpMethod == "GET") {

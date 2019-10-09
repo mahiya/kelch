@@ -1,6 +1,6 @@
 {
     "name": "kelch",
-    "version": "0.8.4",
+    "version": "0.8.5",
     "description": "Build a Restful Web API incredibly easily using JavaScript and AWS Serverless Application Model",
     "preferGlobal": true,
     "engines": {

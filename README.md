@@ -12,6 +12,19 @@ You can use Kelch and deploy your REST API code to your AWS account by following
 $ npm install -g kelch
 ```
 
+### Make directory for codes:
+```sh
+$ mkdir kelch-sample && cd kelch-sample
+```
+
+### Generate a sample code and config file:
+```sh
+$ kelch init
+
+$ ls
+kelch-config.json       sample.js
+```
+
 ### Create REST APIs (sample.js):
 ```javascript
 // You can define functions corresponding to each HTTP method
@@ -38,13 +51,14 @@ function put(req) {
 ### Deploy created Rest APIs:
 ```sh
 $ kelch deploy
+
 ...
+
 REST APIs URL:
 https://[api-gateway-no].execute-api.[aws-region].amazonaws.com/api/sample
 ```
 
-AWS Lambda functions and AWS API Gateway will be deployed to your AWS account.  
-API endpoint is defined according to file name (ex: deployed sample.js can be accessed via https://[endpoint]/api/sample)
+AWS Lambda functions and AWS API Gateway will be deployed to your AWS account. API endpoint is defined according to file name (ex: deployed sample.js can be accessed via https://[endpoint]/api/sample)
 
 ## Command Help
 ```sh
