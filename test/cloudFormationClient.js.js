@@ -36,5 +36,10 @@ describe('cloudFormationClient.js.js', function () {
     it('createBucketIfNotExists', async () => {
     });
 
+    it('getAccountId', async () => {
+        var result = await CloudFormationClient.getAccountId();
+        assert.typeOf(result, 'string', 'check: type of result');
+    });
+
 });
 

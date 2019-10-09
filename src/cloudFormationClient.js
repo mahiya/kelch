@@ -46,4 +46,10 @@ module.exports = class CloudFormationClient {
         }
     }
 
+    static async getAccountId() {
+        var sts = new AWS.STS();
+        var resp = await sts.getCallerIdentity({}).promise();
+        return resp.Account;
+    }
+
 }
