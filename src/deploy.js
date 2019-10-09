@@ -83,6 +83,7 @@ module.exports = class KelchDeploy {
                 runtime: this.getFunctionParameter(fileName, 'runtime', 'nodejs8.10'),
                 enviroments: this.getFunctionParameter(fileName, 'enviroments', {}),
                 tags: this.getFunctionParameter(fileName, 'tags', {}),
+                reservedConcurrentExecutions: this.getFunctionParameter(fileName, 'reservedConcurrentExecutions', null),
             };
 
             // ResourcesにLambda Function リソースを追加する
@@ -99,6 +100,7 @@ module.exports = class KelchDeploy {
                         Variables: properties.enviroments
                     },
                     Tags: properties.tags,
+                    ReservedConcurrentExecutions: properties.reservedConcurrentExecutions,
                     Events: {
                         APIGateway: {
                             Type: 'Api',
@@ -113,6 +115,9 @@ module.exports = class KelchDeploy {
                     }
                 }
             };
+            if (properties.reservedConcurrentExecutions) {
+                template.Resources[logicalName].Properties.ReservedConcurrentExecutions = properties.reservedConcurrentExecutions
+            }
         }
         return template;
     }
