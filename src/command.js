@@ -1,8 +1,8 @@
-const KelchCommon = require('./common');
 const KelchDeploy = require('./deploy')
 const fs = require('fs-extra');
 const path = require('path');
 const AWSClient = require('./awsClient');
+const configFileName = 'kelch-config.json';
 
 module.exports = class KelchCommand {
 
@@ -19,6 +19,12 @@ module.exports = class KelchCommand {
     }
 
     static async createConfig(stackName, s3BucketName, userCodesPath = '.', destDirPath = '.') {
+        var configFilePath = path.join(destDirPath, configFileName);
+        if (fs.existsSync(configFilePath)) {
+            console.log(`config file '${configFileName}' already exists`)
+            return;
+        }
+
         var parameters = await fs.readJSON(path.join(__dirname, 'template', 'config-template.json'));
         parameters['stackName'] = stackName;
         parameters['s3BucketName'] = s3BucketName;
@@ -32,15 +38,11 @@ module.exports = class KelchCommand {
             };
         }
 
-        const configFileName = 'kelch-config.json';
-        var configFilePath = path.join(destDirPath, configFileName);
-        await fs.writeFileSync(configFilePath, JSON.stringify(parameters, null, 2));
+        await fs.writeFile(configFilePath, JSON.stringify(parameters, null, 2));
     }
 
     static async updateConfig() {
-
     }
-
 
     static async deploy(config, stackName, s3BucketName) {
         var kelchDeploy = new KelchDeploy(config);
