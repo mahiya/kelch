@@ -12,30 +12,31 @@ module.exports = class KelchDeploy {
     async deploy(stackName, bucketName) {
         try {
 
-            // デプロイ用に作業フォルダを作成する
+            // Create working directory for the following process
             await this.createWorkingDirectory();
 
-            // AWS CloudFormation テンプレートを生成してファイル出力する
+            // Generate AWS CloudFormation template file
+            console.log('Creating upload artifacts and AWS CloudFormation template file');
             const userCodesPath = '.';
             var template = await this.createTeamplte(userCodesPath);
-            console.log('Creating upload artifacts and AWS CloudFormation template file');
             const templateFilePath = path.join(this.workingDirPath, 'template.json');
             await this.outputTemplateFile(template, templateFilePath)
 
-            // AWS CloudFormation スタックをデプロイする            
+            // Upload functions code and deploy AWS CloudFormation stack
             await AWSClient.deployStack(templateFilePath, stackName, bucketName);
+
+            // Show API endpoints of uploaded function codes
             var apiPaths = this.listFunctionsApiPath(template);
             await this.displayEndpoint(stackName, apiPaths);
 
         } catch (e) {
             console.error(e);
         } finally {
-            // 作業フォルダを削除する
+            // Delete working directory
             await this.deleteWorkingDirectory();
         }
     }
 
-    // 作業用一時フォルダを作成する
     async createWorkingDirectory() {
         await fs.remove(this.workingDirPath);
         await fs.mkdir(this.workingDirPath);
@@ -46,37 +47,37 @@ module.exports = class KelchDeploy {
         // Read template file of AWS CloudFormation template
         var template = await fs.readJSON(path.join(__dirname, 'template', 'cloudformation-template-base.json'));
 
-        // Read the code that will be attached with user's codes
+        // Read Handler code that will be attached with user's codes
         var handlerCode = await fs.readFile(path.join(__dirname, 'handler.js'), { encoding: 'utf-8' });
 
         // Get JavaScript file names
         var fileNames = (await fs.readdir(userCodesPath)).filter(file => path.extname(file).toLowerCase() == '.js');
 
-        // 各JavaScriptファイルごとに処理をする
+        // Process for each function code
         for (var i = 0; i < fileNames.length; i++) {
             var fileName = fileNames[i];
 
-            // リソース名を取得する
+            // Get function name (filename except extension)
             var resourceName = path.basename(fileName, path.extname(fileName));
 
-            // 各JSファイルごとにフォルダを作成する
+            // Create a folder for each JavaScript file
             var codeDirName = resourceName;
             var functionDirPath = path.join(this.workingDirPath, codeDirName);
             await fs.mkdir(functionDirPath);
 
-            // 対象のJSファイルのコードを読み込む
+            // Read JavaScript file
             var userCode = await fs.readFile(path.join(userCodesPath, fileName), { encoding: 'utf-8' });
 
-            // HandlerコードとマージしたJSファイルを作成する
+            // Create JS file merged with Handler code
             await fs.writeFile(path.join(functionDirPath, fileName), userCode + "\n" + handlerCode);
 
-            // node_modulesフォルダをコピーする
+            // Copy node_modules folder
             var nodeModulesPath = path.join(userCodesPath, 'node_modules');
             if (await fs.exists(nodeModulesPath)) {
                 await fs.copy(nodeModulesPath, path.join(functionDirPath, 'node_modules'));
             }
 
-            // 関数の設定を定義する
+            // Get properties of AWS Lambda function for this function
             var properties = {
                 timeout: this.getFunctionParameter(fileName, 'timeout', 3),
                 memorySize: this.getFunctionParameter(fileName, 'memorySize', 128),
@@ -87,7 +88,7 @@ module.exports = class KelchDeploy {
                 reservedConcurrentExecutions: this.getFunctionParameter(fileName, 'reservedConcurrentExecutions', null),
             };
 
-            // ResourcesにLambda Function リソースを追加する
+            // Add Lambda function resource to Resources section at the template
             var logicalName = resourceName.match(/[0-9a-zA-Z]+/g).join("");
             template.Resources[logicalName] = {
                 Type: 'AWS::Serverless::Function',
@@ -124,7 +125,6 @@ module.exports = class KelchDeploy {
         return template;
     }
 
-    // 設定ファイルでのFunctionごとの設定値を取得する
     getFunctionParameter(functionName, parameterName, defaultValue) {
         if (this.config['functions'] != null
             && this.config['functions'][functionName] != null
@@ -156,12 +156,12 @@ module.exports = class KelchDeploy {
         return policies;
     }
 
-    // 指定した AWS CloudFormation テンプレート(JSON)をファイルとして出力する
+    // Output the specified AWS CloudFormation template (JSON) as a file
     async outputTemplateFile(template, outputPath) {
         await fs.writeFile(outputPath, JSON.stringify(template));
     }
 
-    // テンプレートで設定されたFunctionのAPIパス一覧を返す
+    // Return API path list of Function set in template
     listFunctionsApiPath(template) {
         var apiPaths = [];
         for (var logicalName in template.Resources) {
@@ -172,7 +172,7 @@ module.exports = class KelchDeploy {
         return apiPaths;
     }
 
-    // 生成した API Gateway のエンドポイントを表示する
+    // Show generated API Gateway endpoints
     async displayEndpoint(stackName, apiPaths) {
         var outputs = await AWSClient.getStackOutput(stackName);
         var endpoint = outputs['KelchAPIGatewayOutput'];
@@ -182,7 +182,7 @@ module.exports = class KelchDeploy {
         console.log('');
     }
 
-    // 作業用一時フォルダを削除する
+    // Delete working directory
     async deleteWorkingDirectory() {
         await fs.remove(this.workingDirPath);
     }
