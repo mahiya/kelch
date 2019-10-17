@@ -24,7 +24,7 @@ describe('command.js', function () {
         const s3BucketName = 'kelch-test-bucket';
         const userCodesPath = path.join('test', 'sample-project');
         const configFilePath = path.join(workingDirPath, 'kelch-config.json');
-        await KelchCommand.init(stackName, s3BucketName, userCodesPath, workingDirPath);
+        await KelchCommand.init(stackName, s3BucketName, true, userCodesPath, workingDirPath);
         assert.equal(fs.existsSync(path.join(workingDirPath, 'sample.js')), true, 'check: created resource file is exists');
         assert.equal(fs.existsSync(configFilePath), true, 'check: created config file is exists');
     });
@@ -41,7 +41,7 @@ describe('command.js', function () {
         const userCodesPath = path.join('test', 'sample-project');
         const configFilePath = path.join(workingDirPath, 'kelch-config.json');
 
-        await KelchCommand.createConfig(stackName, s3BucketName, userCodesPath, workingDirPath);
+        await KelchCommand.createConfig(stackName, s3BucketName, true, userCodesPath, workingDirPath);
         assert.equal(fs.existsSync(configFilePath), true, 'check: created config file is exists');
 
         var config = await fs.readJSON(configFilePath);
@@ -56,9 +56,6 @@ describe('command.js', function () {
         assert.property(config, 'functions', 'check: config has property "functions"');
         assert.property(config.functions, 'test-api-1.js', 'check: config has each property of function at functions');
         assert.property(config.functions, 'test-api-2.js', 'check: config has each property of function at functions');
-    });
-
-    it('updateConfig', async () => {
     });
 
 });

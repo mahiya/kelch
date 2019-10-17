@@ -4,10 +4,7 @@
     "default": {
         "timeout": 3,
         "memorySize": 128,
-        "runtime": "nodejs8.10",
-        "tags": {
-            "key": "value"
-        }
+        "runtime": "nodejs8.10"
     },
     "functions": {}
 }

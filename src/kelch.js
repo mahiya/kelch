@@ -57,11 +57,13 @@ Commands:
     init
         --stack-name    (optional)
         --s3-bucket     (optional)
+        --detailed      (optional)
     create-resource
         --name          (required)
     create-config
         --stack-name    (optional)
         --s3-bucket     (optional)
+        --detailed      (optional)
     deploy
         --stack-name    (optional)
         --s3-bucket     (optional)
@@ -82,7 +84,8 @@ Commands:
     async init() {
         var stackName = this.getStackName();
         var s3BucketName = await this.getS3BucketName();
-        await KelchCommand.init(stackName, s3BucketName);
+        var detailed = this.checkParameterIsExists('--detailed');
+        await KelchCommand.init(stackName, s3BucketName, detailed);
     }
 
     // $ kelch create-resoure
@@ -99,7 +102,8 @@ Commands:
     async createConfig() {
         var stackName = this.getStackName();
         var s3BucketName = await this.getS3BucketName();
-        await KelchCommand.createConfig(stackName, s3BucketName);
+        var detailed = this.checkParameterIsExists('--detailed');
+        await KelchCommand.createConfig(stackName, s3BucketName, detailed);
     }
 
     // $ kelch deloy
