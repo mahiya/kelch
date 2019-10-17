@@ -21,7 +21,7 @@ module.exports = class KelchCommand {
     static async createConfig(stackName, s3BucketName, userCodesPath = '.', destDirPath = '.') {
         var configFilePath = path.join(destDirPath, configFileName);
         if (fs.existsSync(configFilePath)) {
-            console.log(`config file '${configFileName}' already exists`)
+            console.log(`Config file '${configFileName}' already exists`)
             return;
         }
 
@@ -39,9 +39,6 @@ module.exports = class KelchCommand {
         }
 
         await fs.writeFile(configFilePath, JSON.stringify(parameters, null, 2));
-    }
-
-    static async updateConfig() {
     }
 
     static async deploy(config, stackName, s3BucketName) {

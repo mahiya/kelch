@@ -33,9 +33,6 @@ module.exports = class Kelch {
             case 'create-config':
                 await this.createConfig();
                 break;
-            case 'update-config':
-                await this.updateConfig();
-                break;
             case 'deploy':
                 await this.deploy()
                 break;
@@ -103,11 +100,6 @@ Commands:
         var stackName = this.getStackName();
         var s3BucketName = await this.getS3BucketName();
         await KelchCommand.createConfig(stackName, s3BucketName);
-    }
-
-    // $ kelch update-config
-    async updateConfig() {
-        await KelchCommand.updateConfig();
     }
 
     // $ kelch deloy
