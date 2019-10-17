@@ -2,6 +2,30 @@ const fs = require('fs-extra');
 const path = require('path');
 const KelchCommand = require('./command');
 const AWSClient = require('./awsClient');
+const usage = `
+Usage: kelch COMMAND [ARGS]...
+
+Options:
+    --version
+    --help
+
+Commands:
+    init
+        --stack-name    (optional)
+        --s3-bucket     (optional)
+        --detailed      (optional)
+    create-resource
+        --name          (required)
+    create-config
+        --stack-name    (optional)
+        --s3-bucket     (optional)
+        --detailed      (optional)
+    deploy
+        --stack-name    (optional)
+        --s3-bucket     (optional)
+    delete
+        --stack-name    (optional)
+`;
 
 module.exports = class Kelch {
 
@@ -11,6 +35,7 @@ module.exports = class Kelch {
         this.config = this.getConfig(configFilePath);
     }
 
+    // $ kelch
     async run() {
 
         if (this.checkParameterIsExists('--version')) {
@@ -46,30 +71,7 @@ module.exports = class Kelch {
 
     // $ kelch --help
     usage() {
-        console.log(`
-Usage: kelch COMMAND [ARGS]...
-
-Options:
-    --version
-    --help
-
-Commands:
-    init
-        --stack-name    (optional)
-        --s3-bucket     (optional)
-        --detailed      (optional)
-    create-resource
-        --name          (required)
-    create-config
-        --stack-name    (optional)
-        --s3-bucket     (optional)
-        --detailed      (optional)
-    deploy
-        --stack-name    (optional)
-        --s3-bucket     (optional)
-    delete
-        --stack-name    (optional)
-            `);
+        console.log(usage);
     }
 
     // $ kelch --version
@@ -119,12 +121,10 @@ Commands:
         await KelchCommand.deleteStack(stackName);
     }
 
-    // プログラム実行時に指定されたコマンドを返す
     getCommand(argv) {
         return argv.length < 2 ? null : argv[2];
     }
 
-    // プログラム実行時に入力されたパラメータを返す
     getParameters(argv) {
         var parameters = {};
         for (var i = 0; i < argv.length; i++) {
@@ -139,14 +139,20 @@ Commands:
         return parameters;
     }
 
-    // 指定されたパラメータの値を返す。指定していない場合はデフォルト値を返す
+    getConfig(configPath) {
+        if (fs.existsSync(configPath)) {
+            return fs.readJSONSync(configPath);
+        } else {
+            return {};
+        }
+    }
+
     getParameter(parameterName, defaultValue = null) {
         return this.parameters[parameterName] == undefined
             ? defaultValue
             : this.parameters[parameterName];
     }
 
-    // 指定されたパラメータが入力されているかを返す
     checkParameterIsExists(parameterName) {
         return this.parameters[parameterName] != undefined;
     }
@@ -159,7 +165,8 @@ Commands:
             return this.config['stackName'];
         }
 
-        var defaultStackName = this.getCurrentDirName();
+        // default stack name is directory name if stack name is not inputed by program arguments or config file
+        var defaultStackName = path.basename(process.cwd());
         return defaultStackName;
     }
 
@@ -173,19 +180,6 @@ Commands:
 
         var defaultBucketName = await AWSClient.getDefaultS3BucketName();
         return defaultBucketName;
-    }
-
-    getConfig(configPath) {
-        if (fs.existsSync(configPath)) {
-            return fs.readJSONSync(configPath);
-        } else {
-            return {};
-        }
-    }
-
-    // コマンドを実行したディレクトリの名前を返す
-    getCurrentDirName() {
-        return path.basename(process.cwd());
     }
 
 }
