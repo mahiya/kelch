@@ -4,13 +4,7 @@ exports.handler = async (event) => {
     var req = {
         body: event.body,
         queryStringParameters: event.queryStringParameters,
-        pathParameters: event.pathParameters,
-        // cognitoUserId: event != undefined
-        //     && event.requestContext != undefined
-        //     && event.requestContext.authorizer != undefined
-        //     && event.requestContext.authorizer.claims != undefined
-        //     ? event.requestContext.authorizer.claims["cognito:username"]
-        //     : null,
+        pathParameters: event.pathParameters
     };
 
     if (event.httpMethod == "GET") {
@@ -28,6 +22,14 @@ exports.handler = async (event) => {
     } else if (event.httpMethod == "DELETE") {
         if (typeof del != 'function') return response(405);
         var resp = isAsyncFunction(del) ? await del(req) : del(req);
+        return response(200, resp);
+    } else if (event.httpMethod == "HEAD") {
+        if (typeof head != 'function') return response(405);
+        var resp = isAsyncFunction(head) ? await head(req) : head(req);
+        return response(200, resp);
+    } else if (event.httpMethod == "PATCH") {
+        if (typeof patch != 'function') return response(405);
+        var resp = isAsyncFunction(patch) ? await patch(req) : patch(req);
         return response(200, resp);
     } else {
         return response(405);
