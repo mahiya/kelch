@@ -4,7 +4,7 @@
     "default": {
         "timeout": 3,
         "memorySize": 128,
-        "runtime": "nodejs8.10"
+        "runtime": "nodejs10.x"
     },
     "functions": {}
 }
