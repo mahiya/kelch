@@ -81,7 +81,7 @@ module.exports = class KelchDeploy {
             var properties = {
                 timeout: this.getFunctionParameter(fileName, 'timeout', 3),
                 memorySize: this.getFunctionParameter(fileName, 'memorySize', 128),
-                runtime: this.getFunctionParameter(fileName, 'runtime', 'nodejs10.x'),
+                runtime: this.getFunctionParameter(fileName, 'runtime', 'nodejs12.x'),
                 policies: this.getFunctionPolicies(fileName),
                 enviroments: this.getFunctionParameter(fileName, 'enviroments', {}),
                 tags: this.getFunctionParameter(fileName, 'tags', {}),

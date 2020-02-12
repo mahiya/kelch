@@ -5,7 +5,7 @@
         "auth": true,
         "timeout": 3,
         "memorySize": 128,
-        "runtime": "nodejs10.x",
+        "runtime": "nodejs12.x",
         "policies": {
             "{Resource ARN}": []
         },
